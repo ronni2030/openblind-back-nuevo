@@ -5,7 +5,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { descifrarDatos, cifrarDatos } = require('../lib/encrypDates.js');
+const { descifrarDatos, cifrarDatos } = require('../../../shared/utils/encrypDates');
 const { validationResult } = require('express-validator');
 const indexCtl = {}
 
