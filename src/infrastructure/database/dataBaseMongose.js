@@ -49,16 +49,16 @@ process.on('SIGINT', async () => {
 connectDB();
 
 // 5. Exportar modelos (ajusta las rutas según tu estructura)
-const pageModel = require('../../domain/entities/page');
-const calificacionModel = require('../../domain/entities/calificacion');
-const clienteModel = require('../../domain/entities/cliente');
-const conductorModel = require('../../domain/entities/conductor');
-const estacionModel = require('../../domain/entities/estacion');
-const guiaVozModel = require('../../domain/entities/guiaVoz');
-const lugarTuristicoModel = require('../../domain/entities/lugarTuristico');
-const mensajeModel = require('../../domain/entities/mensaje');
-const rutaModel = require('../../domain/entities/ruta');
-const transporteModel = require('../../domain/entities/trasporte');
+const pageModel = require('../../domain/entities/mongodb/page');
+const calificacionModel = require('../../domain/entities/mongodb/calificacion');
+const clienteModel = require('../../domain/entities/mongodb/cliente');
+const conductorModel = require('../../domain/entities/mongodb/conductor');
+const estacionModel = require('../../domain/entities/mongodb/estacion');
+const guiaVozModel = require('../../domain/entities/mongodb/guiaVoz');
+const lugarTuristicoModel = require('../../domain/entities/mongodb/lugarTuristico');
+const mensajeModel = require('../../domain/entities/mongodb/mensaje');
+const rutaModel = require('../../domain/entities/mongodb/ruta');
+const transporteModel = require('../../domain/entities/mongodb/trasporte');
 
 
 module.exports = {
