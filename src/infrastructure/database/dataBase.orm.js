@@ -133,104 +133,254 @@ usuario.hasMany(page, { foreignKey: 'idUser', onDelete: 'SET NULL' });
 page.belongsTo(usuario, { foreignKey: 'idUser' });
 
 // RELACIONES TRANSPORTE
-categoriaTransporte.hasMany(transporte, { foreignKey: 'categoriaTransporteIdCatTransporte', onDelete: 'SET NULL' });
-transporte.belongsTo(categoriaTransporte, { foreignKey: 'categoriaTransporteIdCatTransporte' });
+categoriaTransporte.hasMany(transporte, {
+    foreignKey: { name: 'idCatTransporte', allowNull: true },
+    onDelete: 'SET NULL'
+});
+transporte.belongsTo(categoriaTransporte, {
+    foreignKey: { name: 'idCatTransporte', allowNull: true }
+});
 
-empresaTransporte.hasMany(transporte, { foreignKey: 'empresaTransporteIdEmpresaTransporte', onDelete: 'SET NULL' });
-transporte.belongsTo(empresaTransporte, { foreignKey: 'empresaTransporteIdEmpresaTransporte' });
+empresaTransporte.hasMany(transporte, {
+    foreignKey: { name: 'idEmpresa', allowNull: true },
+    onDelete: 'SET NULL'
+});
+transporte.belongsTo(empresaTransporte, {
+    foreignKey: { name: 'idEmpresa', allowNull: true }
+});
 
-conductor.hasMany(transporte, { foreignKey: 'conductorIdConductor', onDelete: 'SET NULL' });
-transporte.belongsTo(conductor, { foreignKey: 'conductorIdConductor' });
+conductor.hasMany(transporte, {
+    foreignKey: { name: 'idConductor', allowNull: true },
+    onDelete: 'SET NULL'
+});
+transporte.belongsTo(conductor, {
+    foreignKey: { name: 'idConductor', allowNull: true }
+});
 
-ruta.hasMany(transporte, { foreignKey: 'rutaIdRuta', onDelete: 'SET NULL' });
-transporte.belongsTo(ruta, { foreignKey: 'rutaIdRuta' });
+ruta.hasMany(transporte, {
+    foreignKey: { name: 'idRuta', allowNull: true },
+    onDelete: 'SET NULL'
+});
+transporte.belongsTo(ruta, {
+    foreignKey: { name: 'idRuta', allowNull: true }
+});
 
 // RELACIONES ESTACION
-categoriaEstacion.hasMany(estacion, { foreignKey: 'categoriaEstacionIdCategoriaEstacion', onDelete: 'SET NULL' });
-estacion.belongsTo(categoriaEstacion, { foreignKey: 'categoriaEstacionIdCategoriaEstacion' });
+categoriaEstacion.hasMany(estacion, {
+    foreignKey: { name: 'idCatEstacion', allowNull: true },
+    onDelete: 'SET NULL'
+});
+estacion.belongsTo(categoriaEstacion, {
+    foreignKey: { name: 'idCatEstacion', allowNull: true }
+});
 
 // RELACIONES RUTA-ESTACION (N:M)
-ruta.hasMany(rutaEstacion, { foreignKey: 'rutaIdRuta', onDelete: 'CASCADE' });
-rutaEstacion.belongsTo(ruta, { foreignKey: 'rutaIdRuta' });
+ruta.hasMany(rutaEstacion, {
+    foreignKey: { name: 'idRuta', allowNull: false },
+    onDelete: 'CASCADE'
+});
+rutaEstacion.belongsTo(ruta, {
+    foreignKey: { name: 'idRuta', allowNull: false }
+});
 
-estacion.hasMany(rutaEstacion, { foreignKey: 'estacionIdEstacion', onDelete: 'CASCADE' });
-rutaEstacion.belongsTo(estacion, { foreignKey: 'estacionIdEstacion' });
+estacion.hasMany(rutaEstacion, {
+    foreignKey: { name: 'idEstacion', allowNull: false },
+    onDelete: 'CASCADE'
+});
+rutaEstacion.belongsTo(estacion, {
+    foreignKey: { name: 'idEstacion', allowNull: false }
+});
 
 // RELACIONES HORARIOS
-ruta.hasMany(horario, { foreignKey: 'rutaIdRuta', onDelete: 'CASCADE' });
-horario.belongsTo(ruta, { foreignKey: 'rutaIdRuta' });
+ruta.hasMany(horario, {
+    foreignKey: { name: 'idRuta', allowNull: false },
+    onDelete: 'CASCADE'
+});
+horario.belongsTo(ruta, {
+    foreignKey: { name: 'idRuta', allowNull: false }
+});
 
-estacion.hasMany(horario, { foreignKey: 'estacionIdEstacion', onDelete: 'CASCADE' });
-horario.belongsTo(estacion, { foreignKey: 'estacionIdEstacion' });
+estacion.hasMany(horario, {
+    foreignKey: { name: 'idEstacion', allowNull: false },
+    onDelete: 'CASCADE'
+});
+horario.belongsTo(estacion, {
+    foreignKey: { name: 'idEstacion', allowNull: false }
+});
 
 // RELACIONES METODOS INGRESO-ESTACION (N:M)
-estacion.hasMany(estacionMetodo, { foreignKey: 'estacionIdEstacion', onDelete: 'CASCADE' });
-estacionMetodo.belongsTo(estacion, { foreignKey: 'estacionIdEstacion' });
+estacion.hasMany(estacionMetodo, {
+    foreignKey: { name: 'idEstacion', allowNull: false },
+    onDelete: 'CASCADE'
+});
+estacionMetodo.belongsTo(estacion, {
+    foreignKey: { name: 'idEstacion', allowNull: false }
+});
 
-metodoIngreso.hasMany(estacionMetodo, { foreignKey: 'metodoIngresoIdMetodoIngreso', onDelete: 'CASCADE' });
-estacionMetodo.belongsTo(metodoIngreso, { foreignKey: 'metodoIngresoIdMetodoIngreso' });
+metodoIngreso.hasMany(estacionMetodo, {
+    foreignKey: { name: 'idMetodo', allowNull: false },
+    onDelete: 'CASCADE'
+});
+estacionMetodo.belongsTo(metodoIngreso, {
+    foreignKey: { name: 'idMetodo', allowNull: false }
+});
 
 // RELACIONES LUGARES TURISTICOS
-categoriaLugar.hasMany(lugarTuristico, { foreignKey: 'categoriaLugarIdCatLugar', onDelete: 'SET NULL' });
-lugarTuristico.belongsTo(categoriaLugar, { foreignKey: 'categoriaLugarIdCatLugar' });
+categoriaLugar.hasMany(lugarTuristico, {
+    foreignKey: { name: 'idCatLugar', allowNull: true },
+    onDelete: 'SET NULL'
+});
+lugarTuristico.belongsTo(categoriaLugar, {
+    foreignKey: { name: 'idCatLugar', allowNull: true }
+});
 
-estacion.hasMany(lugarTuristico, { foreignKey: 'estacionIdEstacion', onDelete: 'SET NULL' });
-lugarTuristico.belongsTo(estacion, { foreignKey: 'estacionIdEstacion' });
+estacion.hasMany(lugarTuristico, {
+    foreignKey: { name: 'idEstacion', allowNull: true },
+    onDelete: 'SET NULL'
+});
+lugarTuristico.belongsTo(estacion, {
+    foreignKey: { name: 'idEstacion', allowNull: true }
+});
 
-usuario.hasMany(lugarTuristico, { foreignKey: 'idUser', onDelete: 'SET NULL' });
-lugarTuristico.belongsTo(usuario, { foreignKey: 'idUser' });
+usuario.hasMany(lugarTuristico, {
+    foreignKey: { name: 'idUser', allowNull: true },
+    onDelete: 'SET NULL'
+});
+lugarTuristico.belongsTo(usuario, {
+    foreignKey: { name: 'idUser', allowNull: true }
+});
 
 // RELACIONES MENSAJES
-tipoMensaje.hasMany(mensaje, { foreignKey: 'tipoMensajeIdTipoMensaje', onDelete: 'SET NULL' });
-mensaje.belongsTo(tipoMensaje, { foreignKey: 'tipoMensajeIdTipoMensaje' });
+tipoMensaje.hasMany(mensaje, {
+    foreignKey: { name: 'idTipoMensaje', allowNull: true },
+    onDelete: 'SET NULL'
+});
+mensaje.belongsTo(tipoMensaje, {
+    foreignKey: { name: 'idTipoMensaje', allowNull: true }
+});
 
-usuario.hasMany(mensaje, { foreignKey: 'idUser', onDelete: 'CASCADE' });
-mensaje.belongsTo(usuario, { foreignKey: 'idUser' });
+usuario.hasMany(mensaje, {
+    foreignKey: { name: 'idUser', allowNull: false },
+    onDelete: 'CASCADE'
+});
+mensaje.belongsTo(usuario, {
+    foreignKey: { name: 'idUser', allowNull: false }
+});
 
 // RELACIONES GUIAS DE VOZ
-mensaje.hasMany(guiaVoz, { foreignKey: 'mensajeIdMensaje', onDelete: 'CASCADE' });
-guiaVoz.belongsTo(mensaje, { foreignKey: 'mensajeIdMensaje' });
+mensaje.hasMany(guiaVoz, {
+    foreignKey: { name: 'idMensaje', allowNull: false },
+    onDelete: 'CASCADE'
+});
+guiaVoz.belongsTo(mensaje, {
+    foreignKey: { name: 'idMensaje', allowNull: false }
+});
 
-idioma.hasMany(guiaVoz, { foreignKey: 'idiomaIdIdioma', onDelete: 'SET NULL' });
-guiaVoz.belongsTo(idioma, { foreignKey: 'idiomaIdIdioma' });
+idioma.hasMany(guiaVoz, {
+    foreignKey: { name: 'idIdioma', allowNull: true },
+    onDelete: 'SET NULL'
+});
+guiaVoz.belongsTo(idioma, {
+    foreignKey: { name: 'idIdioma', allowNull: true }
+});
 
-lugarTuristico.hasMany(guiaVoz, { foreignKey: 'lugarTuristicoIdLugar', onDelete: 'CASCADE' });
-guiaVoz.belongsTo(lugarTuristico, { foreignKey: 'lugarTuristicoIdLugar' });
+lugarTuristico.hasMany(guiaVoz, {
+    foreignKey: { name: 'idLugar', allowNull: false },
+    onDelete: 'CASCADE'
+});
+guiaVoz.belongsTo(lugarTuristico, {
+    foreignKey: { name: 'idLugar', allowNull: false }
+});
 
-usuario.hasMany(guiaVoz, { foreignKey: 'idUser', onDelete: 'SET NULL' });
-guiaVoz.belongsTo(usuario, { foreignKey: 'idUser' });
+usuario.hasMany(guiaVoz, {
+    foreignKey: { name: 'idUser', allowNull: true },
+    onDelete: 'SET NULL'
+});
+guiaVoz.belongsTo(usuario, {
+    foreignKey: { name: 'idUser', allowNull: true }
+});
 
 // RELACIONES CALIFICACIONES
-usuario.hasMany(calificacion, { foreignKey: 'idUser', onDelete: 'CASCADE' });
-calificacion.belongsTo(usuario, { foreignKey: 'idUser' });
+usuario.hasMany(calificacion, {
+    foreignKey: { name: 'idUser', allowNull: false },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(usuario, {
+    foreignKey: { name: 'idUser', allowNull: false }
+});
 
-transporte.hasMany(calificacion, { foreignKey: 'transporteIdTransporte', onDelete: 'CASCADE' });
-calificacion.belongsTo(transporte, { foreignKey: 'transporteIdTransporte' });
+transporte.hasMany(calificacion, {
+    foreignKey: { name: 'idTransporte', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(transporte, {
+    foreignKey: { name: 'idTransporte', allowNull: true }
+});
 
-conductor.hasMany(calificacion, { foreignKey: 'conductorIdConductor', onDelete: 'CASCADE' });
-calificacion.belongsTo(conductor, { foreignKey: 'conductorIdConductor' });
+conductor.hasMany(calificacion, {
+    foreignKey: { name: 'idConductor', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(conductor, {
+    foreignKey: { name: 'idConductor', allowNull: true }
+});
 
-ruta.hasMany(calificacion, { foreignKey: 'rutaIdRuta', onDelete: 'CASCADE' });
-calificacion.belongsTo(ruta, { foreignKey: 'rutaIdRuta' });
+ruta.hasMany(calificacion, {
+    foreignKey: { name: 'idRuta', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(ruta, {
+    foreignKey: { name: 'idRuta', allowNull: true }
+});
 
-estacion.hasMany(calificacion, { foreignKey: 'estacionIdEstacion', onDelete: 'CASCADE' });
-calificacion.belongsTo(estacion, { foreignKey: 'estacionIdEstacion' });
+estacion.hasMany(calificacion, {
+    foreignKey: { name: 'idEstacion', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(estacion, {
+    foreignKey: { name: 'idEstacion', allowNull: true }
+});
 
-lugarTuristico.hasMany(calificacion, { foreignKey: 'lugarTuristicoIdLugar', onDelete: 'CASCADE' });
-calificacion.belongsTo(lugarTuristico, { foreignKey: 'lugarTuristicoIdLugar' });
+lugarTuristico.hasMany(calificacion, {
+    foreignKey: { name: 'idLugar', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(lugarTuristico, {
+    foreignKey: { name: 'idLugar', allowNull: true }
+});
 
-guiaVoz.hasMany(calificacion, { foreignKey: 'guiaVozIdGuia', onDelete: 'CASCADE' });
-calificacion.belongsTo(guiaVoz, { foreignKey: 'guiaVozIdGuia' });
+guiaVoz.hasMany(calificacion, {
+    foreignKey: { name: 'idGuia', allowNull: true },
+    onDelete: 'CASCADE'
+});
+calificacion.belongsTo(guiaVoz, {
+    foreignKey: { name: 'idGuia', allowNull: true }
+});
 
 // RELACIONES TARIFAS
-ruta.hasMany(tarifa, { foreignKey: 'rutaIdRuta', onDelete: 'CASCADE' });
-tarifa.belongsTo(ruta, { foreignKey: 'rutaIdRuta' });
+ruta.hasMany(tarifa, {
+    foreignKey: { name: 'idRuta', allowNull: true },
+    onDelete: 'CASCADE'
+});
+tarifa.belongsTo(ruta, {
+    foreignKey: { name: 'idRuta', allowNull: true }
+});
 
-transporte.hasMany(tarifa, { foreignKey: 'transporteIdTransporte', onDelete: 'CASCADE' });
-tarifa.belongsTo(transporte, { foreignKey: 'transporteIdTransporte' });
+transporte.hasMany(tarifa, {
+    foreignKey: { name: 'idTransporte', allowNull: true },
+    onDelete: 'CASCADE'
+});
+tarifa.belongsTo(transporte, {
+    foreignKey: { name: 'idTransporte', allowNull: true }
+});
 
-lugarTuristico.hasMany(tarifa, { foreignKey: 'lugarTuristicoIdLugar', onDelete: 'CASCADE' });
-tarifa.belongsTo(lugarTuristico, { foreignKey: 'lugarTuristicoIdLugar' });
+lugarTuristico.hasMany(tarifa, {
+    foreignKey: { name: 'idLugar', allowNull: true },
+    onDelete: 'CASCADE'
+});
+tarifa.belongsTo(lugarTuristico, {
+    foreignKey: { name: 'idLugar', allowNull: true }
+});
 
 // RELACIONES ADICIONALES
 usuario.hasMany(conductor, { foreignKey: 'idUser', onDelete: 'SET NULL' });
