@@ -5,7 +5,7 @@ const path = require('path');
 const axios = require('axios');
 const FormData = require('form-data');
 const bcrypt = require('bcrypt');
-const { cifrarDatos, descifrarDatos } = require('../../../shared/utils/encrypDates');
+const { cifrarDatos, descifrarDatos } = require('../../application/encryption/encrypDates');
 
 //archvios de coneccion
 const orm = require('../database/connection/dataBase.orm');

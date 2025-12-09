@@ -2,7 +2,7 @@ const passport = require('passport');
 const orm = require('../../database/connection/dataBase.orm');
 const sql = require('../../database/connection/dataBase.sql');
 const { validationResult } = require('express-validator');
-const { cifrarDatos, descifrarDatos } = require('../../../shared/utils/encrypDates');
+const { cifrarDatos, descifrarDatos } = require('../../../application/encryption/encrypDates');
 const bcrypt = require('bcrypt');
 
 const authCtl = {};

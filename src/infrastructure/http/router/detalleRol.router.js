@@ -15,7 +15,7 @@ const {
 } = require('../controllers/detalleRol.controller');
 
 // Middleware de autenticación (opcional, descomenta si lo necesitas)
-// const isLoggedIn = require('../middlewares/auth');
+// const isLoggedIn = require('../../../application/auth/isAuthenticated');
 
 // Validaciones para asignar múltiples roles
 const validacionMultiplesRoles = [

@@ -1,7 +1,7 @@
 const rolCtl = {};
 const orm = require('../../database/connection/dataBase.orm');
 const sql = require('../../database/connection/dataBase.sql');
-const { cifrarDatos, descifrarDatos } = require('../../../shared/utils/encrypDates');
+const { cifrarDatos, descifrarDatos } = require('../../../application/encryption/encrypDates');
 
 // Función para descifrar de forma segura
 const descifrarSeguro = (dato) => {
