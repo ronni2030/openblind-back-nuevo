@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLPORT } = require("../config/keys");
+const { MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLPORT } = require("../../../config/keys");
 
 // ==================== CONFIGURACIÓN DEL POOL ====================
 // Pool optimizado para conexiones MySQL raw (sin ORM)
