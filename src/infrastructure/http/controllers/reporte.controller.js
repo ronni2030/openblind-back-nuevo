@@ -1,6 +1,6 @@
 const reporteCtl = {};
 const sql = require('../../database/connection/dataBase.sql');
-const { cifrarDatos, descifrarDatos } = require('../../../application/encryption/encrypDates');
+const { cifrarDatos, descifrarDatos } = require('../../../application/encrypDates');
 
 // Función para descifrar de forma segura
 const descifrarSeguro = (dato) => {

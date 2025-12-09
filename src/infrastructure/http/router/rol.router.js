@@ -15,7 +15,7 @@ const {
 } = require('../controllers/rol.controller');
 
 // Middleware de autenticación (opcional, descomenta si lo necesitas)
-// const isLoggedIn = require('../../../application/auth/isAuthenticated');
+// const isLoggedIn = require('../../../application/isAuthenticated');
 
 // Validaciones para crear rol
 const validacionCrearRol = [
