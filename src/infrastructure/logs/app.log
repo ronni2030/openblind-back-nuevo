@@ -2700,3 +2700,23 @@ Stack: SyntaxError: Expected ',' or '}' after property value in JSON at position
 2025-07-28 21:29:10 [INFO]: Base de Datos sincronizadas
 2025-07-28 21:33:42 [INFO]: [0mPOST /auth/register [32m201[0m 241.254 ms - 202[0m
 2025-07-28 21:34:30 [INFO]: [0mPOST /auth/login [32m200[0m 141.108 ms - 196[0m
+2025-12-09 13:30:33 [INFO]: El servidor está escuchando en el puerto 8888
+2025-12-09 13:30:34 [INFO]: ✅ Mongoose conectado a MongoDB en: 31.97.42.126
+2025-12-09 13:30:34 [INFO]: 🚀 MongoDB conectado correctamente
+2025-12-09 13:30:34 [INFO]: 📊 Base de datos: openblind
+2025-12-09 13:30:34 [INFO]: 🌐 Host: 31.97.42.126
+2025-12-09 13:30:34 [INFO]: 🔢 Puerto: 27017
+2025-12-09 13:30:54 [ERROR]: ❌ Timeout al conectar con MySQL
+2025-12-09 13:31:37 [ERROR]: ❌ No se pudo conectar a MySQL: connect ETIMEDOUT 31.97.42.126:3306
+2025-12-09 13:31:37 [ERROR]: ❌ Error al sincronizar modelos: connect ETIMEDOUT 31.97.42.126:3306
+2025-12-09 13:31:55 [INFO]: 🔌 Pool MySQL cerrado correctamente
+2025-12-09 13:31:59 [INFO]: El servidor está escuchando en el puerto 8888
+2025-12-09 13:32:00 [INFO]: ✅ Mongoose conectado a MongoDB en: 31.97.42.126
+2025-12-09 13:32:00 [INFO]: 🚀 MongoDB conectado correctamente
+2025-12-09 13:32:00 [INFO]: 📊 Base de datos: openblind
+2025-12-09 13:32:00 [INFO]: 🌐 Host: 31.97.42.126
+2025-12-09 13:32:00 [INFO]: 🔢 Puerto: 27017
+2025-12-09 13:32:20 [ERROR]: ❌ Timeout al conectar con MySQL
+2025-12-09 13:33:03 [ERROR]: ❌ No se pudo conectar a MySQL: connect ETIMEDOUT 31.97.42.126:3306
+2025-12-09 13:33:03 [ERROR]: ❌ Error al sincronizar modelos: connect ETIMEDOUT 31.97.42.126:3306
+2025-12-09 13:44:40 [INFO]: 🔌 Pool MySQL cerrado correctamente
