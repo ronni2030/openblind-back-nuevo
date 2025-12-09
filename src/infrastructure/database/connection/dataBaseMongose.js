@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { MONGODB_URI } = require('../config/keys');
+const { MONGODB_URI } = require('../../../config/keys');
 
 // ==================== CONFIGURACIÓN DE EVENTOS DE MONGOOSE ====================
 
