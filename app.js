@@ -21,8 +21,8 @@ const toobusy = require('toobusy-js');
 const cors = require('cors');
 
 // Importar módulos locales
-const { MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLPORT } = require('./keys');
-require('../web/middlewares/passport');
+const { MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLPORT } = require('./src/config/keys');
+require('./src/infrastructure/lib/passport');
 
 // Crear aplicación Express
 const app = express();
@@ -41,9 +41,9 @@ app.use(cors({
 // ==================== CONFIGURACIÓN DE LOGS MEJORADA ====================
 
 // 1. Configuración de directorio de logs
-const logDir = path.join(__dirname, 'logs');
+const logDir = path.join(__dirname, 'src/infrastructure/logs');
 if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir);
+    fs.mkdirSync(logDir, { recursive: true });
 }
 
 // 2. Configuración de Winston para logs unificados (consola y archivo)
@@ -248,25 +248,25 @@ app.use((req, res, next) => {
 
 // ==================== RUTAS API ====================
 // Importar y configurar rutas como API
-app.use(require('../web/routes/index'))
-app.use('/pagina', require('../web/routes/pagina.router'))
-app.use('/auth', require('../web/routes/auth.router'));
-app.use('/conductor', require('../web/routes/conductor.router'));
-app.use('/horario', require('../web/routes/horario.router'));
-app.use('/empresas', require('../web/routes/empresa.router'));
-app.use('/transporte', require('../web/routes/transporte.router'));
-app.use('/ruta', require('../web/routes/ruta.router'));
-app.use('/calificacion', require('../web/routes/calificacion.router'));
-app.use('/categoria', require('../web/routes/categoria.router'));
-app.use('/estacion', require('../web/routes/estacion.router'));
-app.use('/tarifas', require('../web/routes/tarifas.router'));
-app.use('/lugares', require('../web/routes/lugarTuristico.router'));
-app.use('/mensajes', require('../web/routes/mensaje.router'));
-app.use('/guia-voz', require('../web/routes/guiaVoz.router'));
-app.use('/reporte', require('../web/routes/reporte.router'));
-app.use('/usuarios', require('../web/routes/user.router'));
-app.use('/roles', require('../web/routes/rol.router'));
-app.use('/detalle-rol', require('../web/routes/detalleRol.router'));
+app.use(require('./src/infrastructure/http/router/index'))
+app.use('/pagina', require('./src/infrastructure/http/router/pagina.router'))
+app.use('/auth', require('./src/infrastructure/http/router/auth.router'));
+app.use('/conductor', require('./src/infrastructure/http/router/conductor.router'));
+app.use('/horario', require('./src/infrastructure/http/router/horario.router'));
+app.use('/empresas', require('./src/infrastructure/http/router/empresa.router'));
+app.use('/transporte', require('./src/infrastructure/http/router/transporte.router'));
+app.use('/ruta', require('./src/infrastructure/http/router/ruta.router'));
+app.use('/calificacion', require('./src/infrastructure/http/router/calificacion.router'));
+app.use('/categoria', require('./src/infrastructure/http/router/categoria.router'));
+app.use('/estacion', require('./src/infrastructure/http/router/estacion.router'));
+app.use('/tarifas', require('./src/infrastructure/http/router/tarifas.router'));
+app.use('/lugares', require('./src/infrastructure/http/router/lugarTuristico.router'));
+app.use('/mensajes', require('./src/infrastructure/http/router/mensaje.router'));
+app.use('/guia-voz', require('./src/infrastructure/http/router/guiaVoz.router'));
+app.use('/reporte', require('./src/infrastructure/http/router/reporte.router'));
+app.use('/usuarios', require('./src/infrastructure/http/router/user.router'));
+app.use('/roles', require('./src/infrastructure/http/router/rol.router'));
+app.use('/detalle-rol', require('./src/infrastructure/http/router/detalleRol.router'));
 
 // Configurar variables globales
 app.use((req, res, next) => {

@@ -1,5 +1,5 @@
-// Punto de entrada para la arquitectura hexagonal
-const app = require('./infrastructure/config/app');
+// Punto de entrada principal de la aplicación
+const app = require('./app');
 
 const port = app.get('port');
 app.listen(port, () => {

@@ -141,16 +141,16 @@ const healthCheck = async () => {
 connectDB();
 
 // ==================== IMPORTAR MODELOS MONGODB ====================
-const pageModel = require('../../domain/entities/mongodb/page');
-const calificacionModel = require('../../domain/entities/mongodb/calificacion');
-const clienteModel = require('../../domain/entities/mongodb/cliente');
-const conductorModel = require('../../domain/entities/mongodb/conductor');
-const estacionModel = require('../../domain/entities/mongodb/estacion');
-const guiaVozModel = require('../../domain/entities/mongodb/guiaVoz');
-const lugarTuristicoModel = require('../../domain/entities/mongodb/lugarTuristico');
-const mensajeModel = require('../../domain/entities/mongodb/mensaje');
-const rutaModel = require('../../domain/entities/mongodb/ruta');
-const transporteModel = require('../../domain/entities/mongodb/trasporte');
+const pageModel = require('../../domain/models/mongodb/page');
+const calificacionModel = require('../../domain/models/mongodb/calificacion');
+const clienteModel = require('../../domain/models/mongodb/cliente');
+const conductorModel = require('../../domain/models/mongodb/conductor');
+const estacionModel = require('../../domain/models/mongodb/estacion');
+const guiaVozModel = require('../../domain/models/mongodb/guiaVoz');
+const lugarTuristicoModel = require('../../domain/models/mongodb/lugarTuristico');
+const mensajeModel = require('../../domain/models/mongodb/mensaje');
+const rutaModel = require('../../domain/models/mongodb/ruta');
+const transporteModel = require('../../domain/models/mongodb/trasporte');
 
 // ==================== EXPORTAR MODELOS Y UTILIDADES ====================
 module.exports = {

@@ -68,30 +68,30 @@ sequelize.sync(syncOptions)
     });
 
 // ==================== IMPORTAR MODELOS ====================
-const usuarioModel = require('../../domain/entities/sql/usuario');
-const rolModel = require('../../domain/entities/sql/rol');
-const detalleRolModel = require('../../domain/entities/sql/detalleRol');
-const pageModel = require('../../domain/entities/sql/page');
-const categoriaTransporteModel = require('../../domain/entities/sql/categoriaTransporte');
-const transporteModel = require('../../domain/entities/sql/transporte');
-const empresaTransporteModel = require('../../domain/entities/sql/empresaTransporte');
-const conductorModel = require('../../domain/entities/sql/conductor');
-const estacionModel = require('../../domain/entities/sql/estacion');
-const categoriaEstacionModel = require('../../domain/entities/sql/categoriaEstacion');
-const rutaModel = require('../../domain/entities/sql/ruta');
-const rutaEstacionModel = require('../../domain/entities/sql/rutaEstacion');
-const horarioModel = require('../../domain/entities/sql/horario');
-const metodoIngresoModel = require('../../domain/entities/sql/metodoIngreso');
-const estacionMetodoModel = require('../../domain/entities/sql/estacionMetodo');
-const categoriaLugarModel = require('../../domain/entities/sql/categoriaLugar');
-const lugarTuristicoModel = require('../../domain/entities/sql/lugarTuristico');
-const tipoMensajeModel = require('../../domain/entities/sql/tipoMensaje');
-const mensajeModel = require('../../domain/entities/sql/mensaje');
-const guiaVozModel = require('../../domain/entities/sql/guiaVoz');
-const idiomaModel = require('../../domain/entities/sql/idioma');
-const calificacionModel = require('../../domain/entities/sql/calificacion');
-const tarifaModel = require('../../domain/entities/sql/tarifa');
-const clienteModel = require('../../domain/entities/sql/cliente');
+const usuarioModel = require('../../domain/models/sql/usuario');
+const rolModel = require('../../domain/models/sql/rol');
+const detalleRolModel = require('../../domain/models/sql/detalleRol');
+const pageModel = require('../../domain/models/sql/page');
+const categoriaTransporteModel = require('../../domain/models/sql/categoriaTransporte');
+const transporteModel = require('../../domain/models/sql/transporte');
+const empresaTransporteModel = require('../../domain/models/sql/empresaTransporte');
+const conductorModel = require('../../domain/models/sql/conductor');
+const estacionModel = require('../../domain/models/sql/estacion');
+const categoriaEstacionModel = require('../../domain/models/sql/categoriaEstacion');
+const rutaModel = require('../../domain/models/sql/ruta');
+const rutaEstacionModel = require('../../domain/models/sql/rutaEstacion');
+const horarioModel = require('../../domain/models/sql/horario');
+const metodoIngresoModel = require('../../domain/models/sql/metodoIngreso');
+const estacionMetodoModel = require('../../domain/models/sql/estacionMetodo');
+const categoriaLugarModel = require('../../domain/models/sql/categoriaLugar');
+const lugarTuristicoModel = require('../../domain/models/sql/lugarTuristico');
+const tipoMensajeModel = require('../../domain/models/sql/tipoMensaje');
+const mensajeModel = require('../../domain/models/sql/mensaje');
+const guiaVozModel = require('../../domain/models/sql/guiaVoz');
+const idiomaModel = require('../../domain/models/sql/idioma');
+const calificacionModel = require('../../domain/models/sql/calificacion');
+const tarifaModel = require('../../domain/models/sql/tarifa');
+const clienteModel = require('../../domain/models/sql/cliente');
 
 // ==================== INSTANCIAR MODELOS ====================
 const usuario = usuarioModel(sequelize, Sequelize);
