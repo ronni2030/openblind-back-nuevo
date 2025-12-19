@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './index.css';
+import './presentation/styles/index.css';
 
 // Configuración API - Detecta automáticamente si es localhost o red local
 const API_URL = window.location.hostname === 'localhost'
