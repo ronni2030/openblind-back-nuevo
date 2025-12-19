@@ -92,6 +92,8 @@ const idiomaModel = require('../../../domain/models/sql/idioma');
 const calificacionModel = require('../../../domain/models/sql/calificacion');
 const tarifaModel = require('../../../domain/models/sql/tarifa');
 const clienteModel = require('../../../domain/models/sql/cliente');
+const lugarFavoritoModel = require('../../../domain/models/sql/lugarFavorito');
+const contactoEmergenciaModel = require('../../../domain/models/sql/contactoEmergencia');
 
 // ==================== INSTANCIAR MODELOS ====================
 const usuario = usuarioModel(sequelize, Sequelize);
@@ -118,6 +120,8 @@ const idioma = idiomaModel(sequelize, Sequelize);
 const calificacion = calificacionModel(sequelize, Sequelize);
 const tarifa = tarifaModel(sequelize, Sequelize);
 const cliente = clienteModel(sequelize, Sequelize);
+const lugarFavorito = lugarFavoritoModel(sequelize, Sequelize);
+const contactoEmergencia = contactoEmergenciaModel(sequelize, Sequelize);
 
 // ==================== RELACIONES (FOREIGN KEYS) ====================
 
@@ -236,6 +240,13 @@ tarifa.belongsTo(lugarTuristico, { constraints: false });
 usuario.hasMany(conductor, { foreignKey: 'idUser', constraints: false });
 conductor.belongsTo(usuario, { foreignKey: 'idUser', constraints: false });
 
+// RELACIONES ACCESIBILIDAD (OPENBLIND)
+cliente.hasMany(lugarFavorito, { foreignKey: 'idCliente', onDelete: 'CASCADE' });
+lugarFavorito.belongsTo(cliente, { foreignKey: 'idCliente' });
+
+cliente.hasMany(contactoEmergencia, { foreignKey: 'idCliente', onDelete: 'CASCADE' });
+contactoEmergencia.belongsTo(cliente, { foreignKey: 'idCliente' });
+
 // ==================== EXPORTAR MODELOS ====================
 module.exports = {
   // Autenticación y permisos
@@ -275,6 +286,10 @@ module.exports = {
   calificacion,
   tarifa,
   cliente,
+
+  // Accesibilidad (OpenBlind)
+  lugarFavorito,
+  contactoEmergencia,
 
   // Instancia de Sequelize (para queries directas)
   sequelize
