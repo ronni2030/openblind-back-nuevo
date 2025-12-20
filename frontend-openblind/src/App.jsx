@@ -121,7 +121,7 @@ const Modal = ({ isOpen, onClose, title, children, type }) => (
 );
 
 // Hook de comandos de voz
-const useVoiceCommands = (onCommand) => {
+const useVoiceCommands = (onCommand, autoStart = true) => {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
 
@@ -153,40 +153,50 @@ const useVoiceCommands = (onCommand) => {
 
     recognitionInstance.onend = () => {
       if (isListening) {
-        recognitionInstance.start();
+        try {
+          recognitionInstance.start();
+        } catch (e) {
+          console.error('Error reiniciando:', e);
+        }
       }
     };
 
     setRecognition(recognitionInstance);
+
+    // INICIAR AUTOMÁTICAMENTE si autoStart es true
+    if (autoStart) {
+      setTimeout(() => {
+        try {
+          recognitionInstance.start();
+          setIsListening(true);
+        } catch (e) {
+          console.error('Error iniciando automáticamente:', e);
+        }
+      }, 500);
+    }
 
     return () => {
       if (recognitionInstance) {
         recognitionInstance.stop();
       }
     };
-  }, []);
-
-  const startListening = () => {
-    if (recognition && !isListening) {
-      recognition.start();
-      setIsListening(true);
-      speak('Comandos de voz activados');
-    }
-  };
-
-  const stopListening = () => {
-    if (recognition && isListening) {
-      recognition.stop();
-      setIsListening(false);
-      speak('Comandos de voz desactivados');
-    }
-  };
+  }, [autoStart]);
 
   const toggleListening = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      startListening();
+    if (recognition) {
+      if (isListening) {
+        recognition.stop();
+        setIsListening(false);
+        speak('Comandos de voz desactivados');
+      } else {
+        try {
+          recognition.start();
+          setIsListening(true);
+          speak('Comandos de voz activados');
+        } catch (e) {
+          console.error('Error iniciando:', e);
+        }
+      }
     }
   };
 
