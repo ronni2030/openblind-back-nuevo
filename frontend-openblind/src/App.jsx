@@ -38,18 +38,28 @@ const extraerContacto = (comando) => {
 
 // Extraer lugar de comandos
 const extraerLugar = (comando) => {
-  // Ejemplo: "agrega mi trabajo en Av. Amazonas"
-  const patterns = {
-    nombre: /(?:agrega|guardar|agregar)\s+(?:mi\s+)?([a-záéíóúñ\s]+?)(?:\s+en|\s+ubicado|$)/i,
-    direccion: /(?:en|ubicado en|dirección)\s+([^,]+)/i
-  };
-
   const resultado = {};
 
-  const matchNombre = comando.match(patterns.nombre);
-  if (matchNombre) resultado.nombreLugar = matchNombre[1].trim();
+  // Detectar si dice "donde estoy" / "ubicación actual" / "en la que estoy"
+  if (/(?:donde estoy|ubicación actual|en la que estoy|ubicación en la que estoy|el lugar donde estoy|la ubicación donde estoy)/i.test(comando)) {
+    resultado.usarGPS = true;
+    resultado.nombreLugar = '';
+    resultado.direccion = '';
+    return resultado;
+  }
 
-  const matchDireccion = comando.match(patterns.direccion);
+  // Si NO es GPS, extraer nombre y dirección normales
+  // Ejemplo: "agrega mi casa en Av. Amazonas"
+  const matchNombre = comando.match(/(?:agrega|guardar|agregar|crear)\s+(?:mi\s+)?([a-záéíóúñ\s]+?)(?:\s+en|\s+ubicado|$)/i);
+  if (matchNombre) {
+    const nombre = matchNombre[1].trim();
+    // Filtrar palabras que no son nombres de lugar
+    if (!/(donde|ubicación|que estoy)/i.test(nombre)) {
+      resultado.nombreLugar = nombre;
+    }
+  }
+
+  const matchDireccion = comando.match(/(?:en|ubicado en|dirección)\s+([^,]+)/i);
   if (matchDireccion) resultado.direccion = matchDireccion[1].trim();
 
   return Object.keys(resultado).length > 0 ? resultado : null;
@@ -237,8 +247,8 @@ const obtenerUbicacionActual = () => {
 // --- VISTA DASHBOARD ---
 const Dashboard = ({ onChangeView }) => {
   const modules = [
-    { id: 'lugares', title: "Lugares", icon: "bookmark", desc: "Tus sitios favoritos", color: "#9b59d6" },
-    { id: 'contactos', title: "Contactos", icon: "contacts", desc: "Llamada rápida", color: "#c471ed" },
+    { id: 'lugares', title: "Lugares Favoritos", icon: "bookmark", desc: "Tus sitios favoritos", color: "#9b59d6" },
+    { id: 'contactos', title: "Contactos de Emergencia", icon: "contacts", desc: "Llamada rápida", color: "#c471ed" },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -448,10 +458,30 @@ const LugaresView = ({ onBack }) => {
   };
 
   const handleVoiceCommand = async (command) => {
-    // Comando: "agrega [lugar] en [dirección]"
+    // Comando: "agrega el lugar donde estoy" / "agrega la ubicación en la que estoy"
     if (command.includes('agrega') || command.includes('agregar') || command.includes('guardar')) {
       const lugarInfo = extraerLugar(command);
-      if (lugarInfo) {
+
+      if (lugarInfo && lugarInfo.usarGPS) {
+        // USAR GPS AUTOMÁTICAMENTE
+        try {
+          speak('Obteniendo tu ubicación');
+          const coords = await obtenerUbicacionActual();
+          setCurrentItem({
+            idLugarFavorito: null,
+            nombreLugar: 'Mi ubicación',
+            direccion: `Lat: ${coords.lat.toFixed(6)}, Lng: ${coords.lng.toFixed(6)}`,
+            latitud: coords.lat,
+            longitud: coords.lng,
+            icono: 'my_location'
+          });
+          setIsEditOpen(true);
+          speak('Ubicación obtenida. Ponle un nombre y guarda');
+        } catch (error) {
+          speak('No pude obtener tu ubicación. Asegúrate de dar permisos');
+        }
+      } else if (lugarInfo) {
+        // Usar nombre y dirección del comando
         setCurrentItem({
           idLugarFavorito: null,
           nombreLugar: lugarInfo.nombreLugar || '',
@@ -461,30 +491,40 @@ const LugaresView = ({ onBack }) => {
           icono: 'place'
         });
         setIsEditOpen(true);
-        speak(`Agregando ${lugarInfo.nombreLugar || 'nuevo lugar'}`);
+        speak(`Agregando ${lugarInfo.nombreLugar || 'nuevo lugar'}. Completa los datos`);
       } else {
         openEditModal();
       }
     }
-    // Comando: "quiero ir a [lugar]"
-    else if (esComandoNavegacion(command)) {
+    // Comando: "quiero ir a casa" / "busca av amazonas"
+    else if (esComandoNavegacion(command) || command.includes('busca') || command.includes('búscame')) {
       const destino = extraerDestino(command);
       const lugar = lugares.find(l => l.nombreLugar.toLowerCase().includes(destino.toLowerCase()));
 
       if (lugar) {
+        // Lugar guardado - navegar con GPS
         navegarALugar(lugar);
       } else {
-        speak(`No encontré ${destino} en tus lugares favoritos`);
+        // No está guardado - buscar en Google Maps
+        const query = destino || command.replace(/(?:busca|búscame|quiero ir|navegar|ir a|llévame)/gi, '').trim();
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+        window.open(url, '_blank');
+        speak(`Buscando ${query} en Google Maps`);
       }
     }
     // Comandos generales
-    else if (command.includes('lista') || command.includes('lugares')) {
-      speak(`Tienes ${lugares.length} lugares: ${lugares.map(l => l.nombreLugar).join(', ')}`);
-    } else if (command.includes('volver') || command.includes('atrás')) {
+    else if (command.includes('lista') || command.includes('muestra')) {
+      if (lugares.length === 0) {
+        speak('No tienes lugares guardados');
+      } else {
+        speak(`Tienes ${lugares.length} lugares: ${lugares.map(l => l.nombreLugar).join(', ')}`);
+      }
+    } else if (command.includes('volver') || command.includes('atrás') || command.includes('menú')) {
       speak('Volviendo al menú');
       onBack();
     } else if (command.includes('dónde estoy')) {
       try {
+        speak('Obteniendo tu ubicación');
         const coords = await obtenerUbicacionActual();
         speak(`Te encuentras en latitud ${coords.lat.toFixed(4)}, longitud ${coords.lng.toFixed(4)}`);
       } catch (error) {
@@ -498,7 +538,7 @@ const LugaresView = ({ onBack }) => {
   if (loading) {
     return (
       <div className="mobile-container">
-        <Header title="Mis Lugares" onBack={onBack} />
+        <Header title="Lugares Favoritos" onBack={onBack} />
         <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'50vh', color:'white'}}>
           <p>Cargando...</p>
         </div>
@@ -508,7 +548,7 @@ const LugaresView = ({ onBack }) => {
 
   return (
     <div className="mobile-container">
-      <Header title="Mis Lugares" onBack={onBack} />
+      <Header title="Lugares Favoritos" onBack={onBack} />
       <div className="view-content">
         <AnimatePresence>
           {lugares.map((lugar, i) => (
