@@ -814,13 +814,12 @@ function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [showSplash, setShowSplash] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const handleStartApp = () => {
+    speak('Bienvenido a OpenBlind, tu asistente de accesibilidad');
+    setTimeout(() => {
       setShowSplash(false);
-      speak('Bienvenido a OpenBlind, tu asistente de accesibilidad');
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
+    }, 100);
+  };
 
   if (showSplash) {
     return (
@@ -829,6 +828,30 @@ function App() {
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1.5, rotate: 360 }} transition={{ duration: 0.8 }} style={{ fontSize: '4rem', zIndex: 20 }}>👁️</motion.div>
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ color: 'white', marginTop: '1rem', zIndex: 20, fontWeight: 800, letterSpacing: '2px' }}>OpenBlind</motion.h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} style={{ color: '#c471ed', marginTop: '0.5rem', zIndex: 20 }}>Accesibilidad para todos</motion.p>
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleStartApp}
+          style={{
+            marginTop: '3rem',
+            padding: '1rem 3rem',
+            fontSize: '1.2rem',
+            fontWeight: '700',
+            color: 'white',
+            background: 'linear-gradient(90deg, #c471ed, #9b59d6)',
+            border: 'none',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            zIndex: 20,
+            boxShadow: '0 4px 20px rgba(196, 113, 237, 0.4)',
+            letterSpacing: '1px'
+          }}
+        >
+          COMENZAR
+        </motion.button>
       </motion.div>
     );
   }
