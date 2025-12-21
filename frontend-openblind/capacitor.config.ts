@@ -5,8 +5,9 @@ const config: CapacitorConfig = {
   appName: 'OpenBlind',
   webDir: 'dist',
   server: {
-    androidScheme: 'https',
-    allowNavigation: ['*']
+    androidScheme: 'http',
+    allowNavigation: ['*'],
+    cleartext: true
   }
 };
 
