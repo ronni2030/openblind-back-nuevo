@@ -1,6 +1,29 @@
 const contactoEmergenciaCtl = {};
 const sql = require('../../database/connection/dataBase.sql');
 
+// Función auxiliar para asegurar que el cliente existe
+async function asegurarClienteExiste(idCliente) {
+    try {
+        // Verificar si el cliente existe
+        const [cliente] = await sql.promise().query(
+            'SELECT idClientes FROM clientes WHERE idClientes = ?',
+            [idCliente]
+        );
+
+        // Si no existe, crearlo
+        if (cliente.length === 0) {
+            await sql.promise().query(
+                'INSERT INTO clientes (idClientes) VALUES (?)',
+                [idCliente]
+            );
+            console.log(`Cliente ${idCliente} creado automáticamente`);
+        }
+    } catch (error) {
+        console.error('Error al asegurar cliente:', error);
+        throw error;
+    }
+}
+
 // Mostrar todos los contactos de emergencia de un cliente
 contactoEmergenciaCtl.obtenerContactos = async (req, res) => {
     try {
@@ -55,6 +78,9 @@ contactoEmergenciaCtl.crearContacto = async (req, res) => {
                 message: 'idCliente, nombreContacto y telefono son obligatorios'
             });
         }
+
+        // Asegurar que el cliente existe antes de insertar
+        await asegurarClienteExiste(idCliente);
 
         const [result] = await sql.promise().query(
             `INSERT INTO contactos_emergencia
