@@ -134,6 +134,7 @@ const Modal = ({ isOpen, onClose, title, children, type }) => (
 const useVoiceCommands = (onCommand, autoStart = true) => {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [firstCommand, setFirstCommand] = useState(true);
 
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -151,6 +152,17 @@ const useVoiceCommands = (onCommand, autoStart = true) => {
       const last = event.results.length - 1;
       const command = event.results[last][0].transcript.toLowerCase();
       console.log('🎤 Comando:', command);
+
+      // Si es el primer comando, activar audio con mensaje de bienvenida
+      if (firstCommand) {
+        try {
+          speak('Comando escuchado');
+          setFirstCommand(false);
+        } catch (e) {
+          console.log('Audio se activará');
+        }
+      }
+
       onCommand(command);
     };
 
@@ -179,6 +191,7 @@ const useVoiceCommands = (onCommand, autoStart = true) => {
         try {
           recognitionInstance.start();
           setIsListening(true);
+          console.log('✅ Comandos de voz ACTIVADOS automáticamente');
         } catch (e) {
           console.error('Error iniciando automáticamente:', e);
         }
@@ -813,13 +826,22 @@ const ContactosView = ({ onBack }) => {
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [showSplash, setShowSplash] = useState(true);
+  const [audioActivated, setAudioActivated] = useState(false);
 
-  const handleStartApp = () => {
-    speak('Bienvenido a OpenBlind, tu asistente de accesibilidad');
-    setTimeout(() => {
+  useEffect(() => {
+    // Cerrar splash automáticamente después de 2 segundos
+    const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 100);
-  };
+      // Intentar activar el audio automáticamente
+      try {
+        speak('Bienvenido a OpenBlind, tu asistente de accesibilidad');
+        setAudioActivated(true);
+      } catch (e) {
+        console.log('Audio bloqueado por navegador, se activará con primer comando');
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (showSplash) {
     return (
@@ -828,30 +850,14 @@ function App() {
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1.5, rotate: 360 }} transition={{ duration: 0.8 }} style={{ fontSize: '4rem', zIndex: 20 }}>👁️</motion.div>
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ color: 'white', marginTop: '1rem', zIndex: 20, fontWeight: 800, letterSpacing: '2px' }}>OpenBlind</motion.h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} style={{ color: '#c471ed', marginTop: '0.5rem', zIndex: 20 }}>Accesibilidad para todos</motion.p>
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleStartApp}
-          style={{
-            marginTop: '3rem',
-            padding: '1rem 3rem',
-            fontSize: '1.2rem',
-            fontWeight: '700',
-            color: 'white',
-            background: 'linear-gradient(90deg, #c471ed, #9b59d6)',
-            border: 'none',
-            borderRadius: '50px',
-            cursor: 'pointer',
-            zIndex: 20,
-            boxShadow: '0 4px 20px rgba(196, 113, 237, 0.4)',
-            letterSpacing: '1px'
-          }}
+          style={{ marginTop: '2rem', color: '#9b59d6', fontSize: '0.9rem' }}
         >
-          COMENZAR
-        </motion.button>
+          Iniciando comandos de voz...
+        </motion.div>
       </motion.div>
     );
   }
