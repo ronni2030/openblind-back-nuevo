@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './presentation/styles/index.css';
 
-// Configuración API - Detecta automáticamente si es localhost o red local
-const API_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:8888'
-  : `http://${window.location.hostname}:8888`;
+// Configuración API - Apunta al servidor remoto
+const API_URL = 'http://31.97.42.126:8888';
 const ID_CLIENTE = 1;
 
 // --- UTILIDADES PARA COMANDOS DE VOZ INTELIGENTES ---
