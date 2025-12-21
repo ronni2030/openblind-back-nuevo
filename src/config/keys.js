@@ -1,4 +1,4 @@
-const MYSQLHOST = '31.97.42.126';
+const MYSQLHOST = 'localhost';
 const MYSQLUSER = 'linkear';
 const MYSQLPASSWORD = '0987021692@Rj';
 const MYSQLDATABASE = 'openblind';
