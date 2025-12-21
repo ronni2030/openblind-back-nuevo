@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './presentation/styles/index.css';
 
-// Configuración API - Apunta al servidor remoto
-const API_URL = 'http://31.97.42.126:8888';
+// Configuración API - Para desarrollo local
+// IMPORTANTE: Para APK móvil, cambiar localhost por tu IP local (ej: 192.168.1.5)
+const API_URL = 'http://localhost:8888';
 const ID_CLIENTE = 1;
 
 // --- UTILIDADES PARA COMANDOS DE VOZ INTELIGENTES ---
