@@ -1,13 +1,14 @@
 // ============================================================
-// CUSTOM HOOK: useVoiceCommands (FIX NETWORK ERROR)
+// CUSTOM HOOK: useVoiceCommands (AUTOMÁTICO + FIX NETWORK ERROR)
 // ============================================================
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-const useVoiceCommands = (onCommand) => {
+const useVoiceCommands = (onCommand, autoStart = true) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
+  const [firstCommand, setFirstCommand] = useState(true);
 
   // 👉 useRef evita recrear la instancia (CLAVE)
   const recognitionRef = useRef(null);
@@ -29,22 +30,46 @@ const useVoiceCommands = (onCommand) => {
 
     const recognition = new SpeechRecognition();
 
-    recognition.continuous = false;
+    recognition.continuous = true;  // ✅ Escucha continua
     recognition.interimResults = false;
     recognition.lang = 'es-ES';
     recognition.maxAlternatives = 1;
 
     // ---- RESULTADO ----
     recognition.onresult = (event) => {
-      const speechResult =
-        event.results[0][0].transcript.toLowerCase();
+      const last = event.results.length - 1;
+      const speechResult = event.results[last][0].transcript.toLowerCase();
+
+      console.log('🎤 Comando detectado:', speechResult);
       setTranscript(speechResult);
+
+      // Si es el primer comando, activar audio con mensaje de bienvenida
+      if (firstCommand) {
+        try {
+          speak('Comando escuchado');
+          setFirstCommand(false);
+        } catch (e) {
+          console.log('Audio se activará con interacción');
+        }
+      }
+
       processCommand(speechResult);
     };
 
     // ---- CUANDO TERMINA ----
     recognition.onend = () => {
-      setIsListening(false);
+      // Reiniciar automáticamente si estaba escuchando
+      if (isListening) {
+        try {
+          recognition.start();
+          console.log('🔄 Reconocimiento reiniciado automáticamente');
+        } catch (e) {
+          console.error('Error reiniciando:', e);
+          setIsListening(false);
+        }
+      } else {
+        setIsListening(false);
+      }
     };
 
     // ---- ERRORES (FIX NETWORK) ----
@@ -63,10 +88,24 @@ const useVoiceCommands = (onCommand) => {
 
     recognitionRef.current = recognition;
 
+    // ✅ INICIAR AUTOMÁTICAMENTE si autoStart es true
+    if (autoStart) {
+      setTimeout(() => {
+        try {
+          recognition.start();
+          setIsListening(true);
+          console.log('✅ Comandos de voz ACTIVADOS automáticamente');
+          speak('Bienvenido a OpenBlind. Los comandos de voz están activos.');
+        } catch (e) {
+          console.error('Error iniciando automáticamente:', e);
+        }
+      }, 1000); // 1 segundo de delay para dar tiempo al navegador
+    }
+
     return () => {
       recognition.abort();
     };
-  }, []);
+  }, [autoStart]);
 
   // ============================================================
   // PROCESAR COMANDOS

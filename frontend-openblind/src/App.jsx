@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
+import useVoiceCommands from './hooks/useVoiceCommands';
 
 // ==================== CONFIGURACIÓN API ====================
 // IMPORTANTE: Cambiar esta IP por la tuya (ejecuta ipconfig para obtenerla)
@@ -795,14 +796,14 @@ function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [showSplash, setShowSplash] = useState(true);
 
-  // Comandos de voz
-  const { isListening, startListening, stopListening } = useVoiceCommands((action) => {
+  // Comandos de voz - ✅ AUTOMÁTICO
+  const { isListening, startListening, stopListening, speak } = useVoiceCommands((action) => {
     if (action === 'dashboard') {
       setCurrentView('dashboard');
     } else if (['lugares', 'contactos', 'rutas', 'ubicacion'].includes(action)) {
       setCurrentView(action);
     }
-  });
+  }, true);  // ← autoStart = true
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2500);
