@@ -167,4 +167,123 @@ lugarFavoritoCtl.eliminarLugar = async (req, res) => {
     }
 };
 
+// ===== MÉTODOS PARA FRONT EXTERNO (REST estándar con apiResponse) =====
+
+// GET todos los lugares
+lugarFavoritoCtl.getAllLugares = async (req, res) => {
+    try {
+        // Por defecto, obtenemos del ID_CLIENTE = 1
+        const ID_CLIENTE = 1;
+
+        const [lugares] = await sql.promise().query(
+            'SELECT idLugarFavorito as id_lugar, nombreLugar as nombre, direccion, latitud, longitud, icono FROM lugares_favoritos WHERE idCliente = ? ORDER BY createLugarFavorito DESC',
+            [ID_CLIENTE]
+        );
+
+        return res.apiResponse(lugares);
+    } catch (error) {
+        console.error('Error al obtener lugares:', error);
+        return res.apiError('Error al obtener lugares favoritos', 500, error.message);
+    }
+};
+
+// POST crear lugar
+lugarFavoritoCtl.createLugar = async (req, res) => {
+    try {
+        const { nombre, direccion, icono, latitud, longitud } = req.body;
+        const ID_CLIENTE = 1;
+
+        if (!nombre || !direccion) {
+            return res.apiError('Nombre y dirección son obligatorios', 400);
+        }
+
+        // Asegurar que el cliente existe
+        await asegurarClienteExiste(ID_CLIENTE);
+
+        const [result] = await sql.promise().query(
+            `INSERT INTO lugares_favoritos
+            (idCliente, nombreLugar, direccion, latitud, longitud, icono, createLugarFavorito, updateLugarFavorito)
+            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+            [ID_CLIENTE, nombre, direccion, latitud || null, longitud || null, icono || 'place']
+        );
+
+        const nuevoLugar = {
+            id_lugar: result.insertId,
+            nombre,
+            direccion,
+            latitud,
+            longitud,
+            icono: icono || 'place'
+        };
+
+        return res.apiResponse(nuevoLugar, 201, 'Lugar favorito creado');
+    } catch (error) {
+        console.error('Error al crear lugar:', error);
+        return res.apiError('Error al crear lugar favorito', 500, error.message);
+    }
+};
+
+// PUT actualizar lugar
+lugarFavoritoCtl.updateLugar = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, direccion, icono, latitud, longitud } = req.body;
+
+        if (!nombre || !direccion) {
+            return res.apiError('Nombre y dirección son obligatorios', 400);
+        }
+
+        const [result] = await sql.promise().query(
+            `UPDATE lugares_favoritos SET
+                nombreLugar = ?,
+                direccion = ?,
+                latitud = ?,
+                longitud = ?,
+                icono = ?,
+                updateLugarFavorito = NOW()
+            WHERE idLugarFavorito = ?`,
+            [nombre, direccion, latitud || null, longitud || null, icono || 'place', id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.apiError('Lugar no encontrado', 404);
+        }
+
+        const lugarActualizado = {
+            id_lugar: id,
+            nombre,
+            direccion,
+            latitud,
+            longitud,
+            icono: icono || 'place'
+        };
+
+        return res.apiResponse(lugarActualizado, 200, 'Lugar favorito actualizado');
+    } catch (error) {
+        console.error('Error al actualizar lugar:', error);
+        return res.apiError('Error al actualizar lugar favorito', 500, error.message);
+    }
+};
+
+// DELETE eliminar lugar
+lugarFavoritoCtl.removeLugar = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [result] = await sql.promise().query(
+            'DELETE FROM lugares_favoritos WHERE idLugarFavorito = ?',
+            [id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.apiError('Lugar no encontrado', 404);
+        }
+
+        return res.apiResponse(null, 200, 'Lugar favorito eliminado');
+    } catch (error) {
+        console.error('Error al eliminar lugar:', error);
+        return res.apiError('Error al eliminar lugar favorito', 500, error.message);
+    }
+};
+
 module.exports = lugarFavoritoCtl;

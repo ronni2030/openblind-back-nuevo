@@ -246,6 +246,11 @@ app.use((req, res, next) => {
     next();
 });
 
+// ==================== MIDDLEWARE API RESPONSE ====================
+// Agregar métodos apiResponse y apiError al objeto res
+const injectApiMethods = require('./src/infrastructure/http/middlewares/apiResponse');
+app.use(injectApiMethods);
+
 // ==================== RUTAS API ====================
 // Importar y configurar rutas como API
 app.use(require('./src/infrastructure/http/router/index'))
@@ -269,6 +274,8 @@ app.use('/roles', require('./src/infrastructure/http/router/rol.router'));
 app.use('/detalle-rol', require('./src/infrastructure/http/router/detalleRol.router'));
 app.use('/lugares-favoritos', require('./src/infrastructure/http/router/lugarFavorito.router'));
 app.use('/contactos-emergencia', require('./src/infrastructure/http/router/contactoEmergencia.router'));
+// Alias para front externo
+app.use('/contactos', require('./src/infrastructure/http/router/contactoEmergencia.router'));
 
 // Configurar variables globales
 app.use((req, res, next) => {

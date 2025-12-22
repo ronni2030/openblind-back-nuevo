@@ -166,4 +166,119 @@ contactoEmergenciaCtl.eliminarContacto = async (req, res) => {
     }
 };
 
+// ===== MÉTODOS PARA FRONT EXTERNO (REST estándar con apiResponse) =====
+
+// GET todos los contactos
+contactoEmergenciaCtl.getAllContactos = async (req, res) => {
+    try {
+        const ID_CLIENTE = 1;
+
+        const [contactos] = await sql.promise().query(
+            'SELECT idContactoEmergencia as id_contacto, nombreContacto as nombre, telefono, relacion, prioridad FROM contactos_emergencia WHERE idCliente = ? ORDER BY prioridad ASC',
+            [ID_CLIENTE]
+        );
+
+        return res.apiResponse(contactos);
+    } catch (error) {
+        console.error('Error al obtener contactos:', error);
+        return res.apiError('Error al obtener contactos', 500, error.message);
+    }
+};
+
+// POST crear contacto
+contactoEmergenciaCtl.createContacto = async (req, res) => {
+    try {
+        const { nombre, telefono, relacion, prioridad } = req.body;
+        const ID_CLIENTE = 1;
+
+        if (!nombre || !telefono) {
+            return res.apiError('Nombre y teléfono son obligatorios', 400);
+        }
+
+        // Asegurar que el cliente existe
+        await asegurarClienteExiste(ID_CLIENTE);
+
+        const [result] = await sql.promise().query(
+            `INSERT INTO contactos_emergencia
+            (idCliente, nombreContacto, telefono, relacion, prioridad, createContactoEmergencia, updateContactoEmergencia)
+            VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+            [ID_CLIENTE, nombre, telefono, relacion || '', prioridad || 1]
+        );
+
+        const nuevoContacto = {
+            id_contacto: result.insertId,
+            nombre,
+            telefono,
+            relacion,
+            prioridad: prioridad || 1
+        };
+
+        return res.apiResponse(nuevoContacto, 201, 'Contacto creado');
+    } catch (error) {
+        console.error('Error al crear contacto:', error);
+        return res.apiError('Error al crear contacto', 500, error.message);
+    }
+};
+
+// PUT actualizar contacto
+contactoEmergenciaCtl.updateContacto = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, telefono, relacion, prioridad } = req.body;
+
+        if (!nombre || !telefono) {
+            return res.apiError('Nombre y teléfono son obligatorios', 400);
+        }
+
+        const [result] = await sql.promise().query(
+            `UPDATE contactos_emergencia SET
+                nombreContacto = ?,
+                telefono = ?,
+                relacion = ?,
+                prioridad = ?,
+                updateContactoEmergencia = NOW()
+            WHERE idContactoEmergencia = ?`,
+            [nombre, telefono, relacion || '', prioridad || 1, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.apiError('Contacto no encontrado', 404);
+        }
+
+        const contactoActualizado = {
+            id_contacto: id,
+            nombre,
+            telefono,
+            relacion,
+            prioridad: prioridad || 1
+        };
+
+        return res.apiResponse(contactoActualizado, 200, 'Contacto actualizado');
+    } catch (error) {
+        console.error('Error al actualizar contacto:', error);
+        return res.apiError('Error al actualizar contacto', 500, error.message);
+    }
+};
+
+// DELETE eliminar contacto
+contactoEmergenciaCtl.removeContacto = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [result] = await sql.promise().query(
+            'DELETE FROM contactos_emergencia WHERE idContactoEmergencia = ?',
+            [id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.apiError('Contacto no encontrado', 404);
+        }
+
+        return res.apiResponse(null, 200, 'Contacto eliminado');
+    } catch (error) {
+        console.error('Error al eliminar contacto:', error);
+        return res.apiError('Error al eliminar contacto', 500, error.message);
+    }
+};
+
 module.exports = contactoEmergenciaCtl;
