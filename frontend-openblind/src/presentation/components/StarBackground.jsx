@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * Componente de fondo con estrellas animadas
  */
-export const StarBackground = () => {
+const StarBackground = () => {
   const stars = new Array(30).fill(0).map((_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
@@ -27,3 +27,5 @@ export const StarBackground = () => {
     </div>
   );
 };
+
+export default StarBackground;
