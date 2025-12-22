@@ -256,6 +256,21 @@ const obtenerUbicacionActual = () => {
   });
 };
 
+// Obtener dirección a partir de coordenadas (reverse geocoding)
+const obtenerDireccionDeCoords = async (lat, lng) => {
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=es`);
+    const data = await response.json();
+    if (data && data.display_name) {
+      return data.display_name;
+    }
+    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  } catch (error) {
+    console.error('Error obteniendo dirección:', error);
+    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+};
+
 // --- VISTA DASHBOARD ---
 const Dashboard = ({ onChangeView }) => {
   const modules = [
@@ -459,12 +474,13 @@ const LugaresView = ({ onBack }) => {
 
   const navegarALugar = (lugar) => {
     if (lugar.latitud && lugar.longitud) {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
-      window.open(url, '_blank');
+      // Usar geo: scheme que funciona en Android
+      const url = `geo:0,0?q=${lugar.latitud},${lugar.longitud}(${encodeURIComponent(lugar.nombreLugar)})`;
+      window.location.href = url;
       speak(`Navegando a ${lugar.nombreLugar}`);
     } else {
-      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar.direccion)}`;
-      window.open(url, '_blank');
+      const url = `geo:0,0?q=${encodeURIComponent(lugar.direccion)}`;
+      window.location.href = url;
       speak(`Buscando ${lugar.nombreLugar} en el mapa`);
     }
   };
@@ -479,16 +495,18 @@ const LugaresView = ({ onBack }) => {
         try {
           speak('Obteniendo tu ubicación');
           const coords = await obtenerUbicacionActual();
+          const direccion = await obtenerDireccionDeCoords(coords.lat, coords.lng);
+
           setCurrentItem({
             idLugarFavorito: null,
-            nombreLugar: 'Mi ubicación',
-            direccion: `Lat: ${coords.lat.toFixed(6)}, Lng: ${coords.lng.toFixed(6)}`,
+            nombreLugar: lugarInfo.nombre || 'Mi ubicación',
+            direccion: direccion,
             latitud: coords.lat,
             longitud: coords.lng,
             icono: 'my_location'
           });
           setIsEditOpen(true);
-          speak('Ubicación obtenida. Ponle un nombre y guarda');
+          speak(`Ubicación obtenida: ${direccion}. Puedes cambiar el nombre o guardar directamente`);
         } catch (error) {
           speak('No pude obtener tu ubicación. Asegúrate de dar permisos');
         }
