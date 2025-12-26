@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as configuracionApi from '../api/configuracionApi';
+import { getUserId } from '../utils/deviceId';
 
 /**
  * HOOK HÍBRIDO: useConfiguracion
@@ -7,15 +8,23 @@ import * as configuracionApi from '../api/configuracionApi';
  * Intenta usar backend (MySQL) primero.
  * Si falla, usa localStorage como fallback.
  *
+ * IDENTIFICACIÓN SIN LOGIN:
+ * - Para usuarios ciegos, NO pedimos login/registro
+ * - Usamos deviceId único generado la primera vez
+ * - Se guarda en localStorage del dispositivo
+ * - Si desinstalan y reinstalan, se genera nuevo ID
+ *
  * ESTO ES LO QUE DEBES EXPLICAR EN LA MASTER CLASS:
  * - "Primero intenta conectar con backend para CRUD real con MySQL"
  * - "Si no hay backend disponible (offline), usa localStorage"
  * - "Esto se llama 'offline-first' o 'progressive enhancement'"
+ * - "Para usuarios ciegos, usar deviceId es más accesible que login/registro"
  */
 
 export const useConfiguracion = () => {
   const [useBackend, setUseBackend] = useState(false);
-  const [userId, setUserId] = useState(1); // TODO: Obtener del contexto de autenticación
+  // userId basado en deviceId único (sin login/registro)
+  const [userId, setUserId] = useState(() => getUserId(true)); // true = modo demo (userId=1)
 
   // ═══════════════════════════════════════════════════
   // ESTADO INICIAL (valores por defecto)

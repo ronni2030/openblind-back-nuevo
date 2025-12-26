@@ -177,13 +177,27 @@ const Configuracion = sequelize.define('Configuracion', {
     },
 
     // ═══════════════════════════════════════════════════
-    // METADATOS
+    // METADATOS Y BORRADO LÓGICO
     // ═══════════════════════════════════════════════════
+    activo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+        comment: 'Borrado lógico: true = activo, false = eliminado'
+    },
+
     ultimaActualizacion: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
         allowNull: false,
         comment: 'Última vez que se modificó la configuración'
+    },
+
+    fechaEliminacion: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
+        comment: 'Fecha de borrado lógico (si activo = false)'
     }
 }, {
     tableName: 'configuracion',

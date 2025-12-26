@@ -8,15 +8,12 @@ const {
     updateField,
     reset,
     delete: deleteConfig,
-    list
+    restore
 } = require('../controllers/configuracion.controller');
 
 // ═══════════════════════════════════════════════════
-// RUTAS CRUD DE CONFIGURACIÓN
+// RUTAS CRUD DE CONFIGURACIÓN (Usuario final, NO admin)
 // ═══════════════════════════════════════════════════
-
-// GET /api/configuracion - Listar todas (admin)
-router.get('/', list);
 
 // GET /api/configuracion/:userId - Obtener configuración de un usuario
 router.get('/:userId', getByUserId);
@@ -33,7 +30,10 @@ router.patch('/:userId/field', updateField);
 // POST /api/configuracion/:userId/reset - Resetear a valores por defecto
 router.post('/:userId/reset', reset);
 
-// DELETE /api/configuracion/:userId - Eliminar configuración
+// DELETE /api/configuracion/:userId - Eliminar configuración (borrado lógico)
 router.delete('/:userId', deleteConfig);
+
+// POST /api/configuracion/:userId/restore - Restaurar configuración eliminada
+router.post('/:userId/restore', restore);
 
 module.exports = router;

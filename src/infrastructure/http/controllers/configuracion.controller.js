@@ -59,7 +59,7 @@ configuracionController.create = async (req, res) => {
 };
 
 // ═══════════════════════════════════════════════════
-// READ: Obtener configuración del usuario
+// READ: Obtener configuración del usuario (solo activas)
 // ═══════════════════════════════════════════════════
 configuracionController.getByUserId = async (req, res) => {
     try {
@@ -72,11 +72,19 @@ configuracionController.getByUserId = async (req, res) => {
             });
         }
 
-        let config = await Configuracion.findOne({ where: { userId } });
+        let config = await Configuracion.findOne({
+            where: {
+                userId,
+                activo: true // Solo configuraciones activas (no eliminadas)
+            }
+        });
 
-        // Si no existe, crear con valores por defecto
+        // Si no existe (o fue eliminada lógicamente), crear con valores por defecto
         if (!config) {
-            config = await Configuracion.create({ userId });
+            config = await Configuracion.create({
+                userId,
+                activo: true
+            });
         }
 
         res.json({
@@ -278,7 +286,7 @@ configuracionController.reset = async (req, res) => {
 };
 
 // ═══════════════════════════════════════════════════
-// DELETE: Eliminar configuración (borrado lógico)
+// DELETE: Eliminar configuración (BORRADO LÓGICO)
 // ═══════════════════════════════════════════════════
 configuracionController.delete = async (req, res) => {
     try {
@@ -291,21 +299,33 @@ configuracionController.delete = async (req, res) => {
             });
         }
 
-        const config = await Configuracion.findOne({ where: { userId } });
+        const config = await Configuracion.findOne({
+            where: {
+                userId,
+                activo: true // Solo buscar configuraciones activas
+            }
+        });
 
         if (!config) {
             return res.status(404).json({
                 success: false,
-                message: 'Configuración no encontrada'
+                message: 'Configuración no encontrada o ya eliminada'
             });
         }
 
-        // Borrado físico (o podrías hacer borrado lógico agregando campo 'activo')
-        await config.destroy();
+        // BORRADO LÓGICO: Marcar como inactivo en lugar de eliminar
+        await config.update({
+            activo: false,
+            fechaEliminacion: new Date()
+        });
 
         res.json({
             success: true,
-            message: 'Configuración eliminada exitosamente'
+            message: 'Configuración eliminada exitosamente (borrado lógico)',
+            data: {
+                userId: config.userId,
+                eliminadoEn: config.fechaEliminacion
+            }
         });
 
     } catch (error) {
@@ -319,25 +339,50 @@ configuracionController.delete = async (req, res) => {
 };
 
 // ═══════════════════════════════════════════════════
-// LIST: Listar todas las configuraciones (admin)
+// RESTORE: Restaurar configuración eliminada (recuperar)
 // ═══════════════════════════════════════════════════
-configuracionController.list = async (req, res) => {
+configuracionController.restore = async (req, res) => {
     try {
-        const configs = await Configuracion.findAll({
-            order: [['ultimaActualizacion', 'DESC']]
+        const userId = req.params.userId || (req.user ? req.user.id : null);
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'userId es requerido'
+            });
+        }
+
+        const config = await Configuracion.findOne({
+            where: {
+                userId,
+                activo: false // Buscar eliminadas
+            }
+        });
+
+        if (!config) {
+            return res.status(404).json({
+                success: false,
+                message: 'No hay configuración eliminada para restaurar'
+            });
+        }
+
+        // Restaurar: marcar como activo nuevamente
+        await config.update({
+            activo: true,
+            fechaEliminacion: null
         });
 
         res.json({
             success: true,
-            count: configs.length,
-            data: configs
+            message: 'Configuración restaurada exitosamente',
+            data: config
         });
 
     } catch (error) {
-        console.error('Error listando configuraciones:', error);
+        console.error('Error restaurando configuración:', error);
         res.status(500).json({
             success: false,
-            message: 'Error al listar configuraciones',
+            message: 'Error al restaurar configuración',
             error: error.message
         });
     }
