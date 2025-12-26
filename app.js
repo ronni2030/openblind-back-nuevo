@@ -276,6 +276,8 @@ app.use('/lugares-favoritos', require('./src/infrastructure/http/router/lugarFav
 app.use('/contactos-emergencia', require('./src/infrastructure/http/router/contactoEmergencia.router'));
 // Alias para front externo
 app.use('/contactos', require('./src/infrastructure/http/router/contactoEmergencia.router'));
+// Ruta de configuración de usuario
+app.use('/api/configuracion', require('./src/infrastructure/http/router/configuracion.router'));
 
 // Configurar variables globales
 app.use((req, res, next) => {
