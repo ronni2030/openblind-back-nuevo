@@ -8,8 +8,8 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './application/App.jsx'
-import './shared/styles/index.css'
+import App from '../routes/App.jsx'
+import '../styles/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -5,11 +5,11 @@
  */
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Layout from '@widgets/Layout/Layout'
-import DashboardPage from '@pages/DashboardPage'
-import ConfigAccesibilidadPage from '@pages/ConfigAccesibilidadPage'
-import ConfigNavegacionPage from '@pages/ConfigNavegacionPage'
-import ConfigPrivacidadPage from '@pages/ConfigPrivacidadPage'
+import Layout from '@widgets/layout'
+import DashboardPage from '@pages/dashboard'
+import ConfigAccesibilidadPage from '@pages/config-accesibilidad'
+import ConfigNavegacionPage from '@pages/config-navegacion'
+import ConfigPrivacidadPage from '@pages/config-privacidad'
 
 function App() {
   return (
