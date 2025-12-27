@@ -1,0 +1,445 @@
+# 👨‍💻 DAVID MALDONADO - Responsabilidades
+
+**Estudiante:** MALDONADO DELGADO DAVID ALEJANDRO (N°5)
+**Módulo:** Gestión de Incidencias + Gestión de Soporte
+
+---
+
+## 📋 TU PARTE DEL PROYECTO
+
+### **1️⃣ Gestión de Incidencias (CRUD COMPLETO)**
+
+**Ubicación Frontend:**
+```
+frontend-admin/src/features/incidencias/screens/
+├── IncidenciasScreen.jsx       ← TU CÓDIGO
+└── IncidenciasScreen.css       ← TU CÓDIGO
+```
+
+**Lo que hace:**
+
+✅ **CREATE (Crear):**
+- Modal para registrar nuevas incidencias
+- Formulario con: título, descripción, zona, tipo, estado
+- Botón "+ Nueva Incidencia"
+
+✅ **READ (Leer):**
+- Tabla con todas las incidencias registradas
+- Muestra: ID, Título, Zona, Tipo, Estado, Fecha
+- Badges de colores para estados
+
+✅ **UPDATE (Actualizar):**
+- Botón de editar (✏️) en cada fila
+- Modal para modificar incidencia existente
+- Cambiar estado: Pendiente → En Revisión → Resuelta → Descartada
+
+✅ **DELETE (Eliminar):**
+- Botón de eliminar (🗑️) en cada fila
+- Borrado lógico (no se elimina de la BD, solo se marca como inactiva)
+- Confirmación antes de eliminar
+
+**Campos de una Incidencia:**
+- `titulo` - Título de la incidencia
+- `descripcion` - Descripción detallada
+- `zona` - Zona geográfica (Centro, Norte, Sur, etc.)
+- `tipo` - Tipo de incidencia: accesibilidad, señalización, infraestructura, otro
+- `estado` - Estado: pendiente, en_revision, resuelta, descartada
+- `fecha` - Fecha de registro
+
+**Endpoints que usa:**
+```javascript
+GET    /api/admin/incidencias           // Listar todas
+GET    /api/admin/incidencias/:id       // Obtener una por ID
+POST   /api/admin/incidencias           // Crear nueva
+PUT    /api/admin/incidencias/:id       // Actualizar
+DELETE /api/admin/incidencias/:id       // Eliminar (soft delete)
+```
+
+---
+
+### **2️⃣ Gestión de Soporte (READ, UPDATE, DELETE)**
+
+**Ubicación Frontend:**
+```
+frontend-admin/src/features/soporte/screens/
+└── SoporteScreen.jsx       ← TU CÓDIGO
+```
+
+**Lo que hace:**
+
+✅ **READ (Leer):**
+- Tabla con todos los tickets de soporte
+- Muestra: ID, Asunto, Usuario, Prioridad, Estado, Fecha
+- Filtros por estado y prioridad
+- Badges de colores para prioridad (baja, media, alta)
+
+✅ **UPDATE (Actualizar):**
+- Dropdown en cada fila para cambiar estado
+- Estados: Pendiente → En Proceso → Resuelto → Cerrado
+- Actualización instantánea al cambiar
+
+✅ **DELETE (Archivar):**
+- Botón de eliminar (🗑️) en cada fila
+- Archiva tickets antiguos o irrelevantes
+- Borrado lógico (no se elimina, se marca como inactivo)
+
+**Campos de un Ticket:**
+- `asunto` - Asunto del ticket
+- `descripcion` - Descripción del problema
+- `usuario` - Nombre del usuario que reportó
+- `estado` - Estado: pendiente, en_proceso, resuelto, cerrado
+- `prioridad` - Prioridad: baja, media, alta
+- `fecha` - Fecha de creación
+
+**Endpoints que usa:**
+```javascript
+GET    /api/admin/soporte           // Listar todos
+GET    /api/admin/soporte/:id       // Obtener uno por ID
+PUT    /api/admin/soporte/:id       // Actualizar (cambiar estado)
+DELETE /api/admin/soporte/:id       // Archivar ticket
+```
+
+---
+
+## 🎨 COMPONENTES COMPARTIDOS QUE USAS
+
+**Ubicación:**
+```
+frontend-admin/src/shared/components/
+├── Card.jsx       ← Tarjetas con animaciones
+├── Button.jsx     ← Botones con estilos
+├── Badge.jsx      ← Etiquetas de estado
+└── Layout.jsx     ← Sidebar + contenido
+```
+
+**Cómo usarlos en tu código:**
+```javascript
+import { Card, Button, Badge } from '@shared/components';
+
+// Ejemplo de uso:
+<Card>
+  <table className="data-table">
+    {/* Tu tabla aquí */}
+  </table>
+</Card>
+
+<Button variant="primary" onClick={handleCreate}>
+  + Nueva Incidencia
+</Button>
+
+<Badge variant="success">Resuelta</Badge>
+<Badge variant="warning">Pendiente</Badge>
+<Badge variant="danger">Alta Prioridad</Badge>
+```
+
+---
+
+## ⚙️ BACKEND - TU PARTE
+
+### **Modelos creados:**
+
+```
+src/domain/models/sql/admin/
+├── incidencia.js           ← TU MODELO
+└── ticketSoporte.js        ← TU MODELO
+```
+
+**Modelo Incidencia:**
+```javascript
+{
+  id: INTEGER (auto-increment),
+  titulo: STRING(255),
+  descripcion: TEXT,
+  zona: STRING(100),
+  tipo: ENUM('accesibilidad', 'señalización', 'infraestructura', 'otro'),
+  estado: ENUM('pendiente', 'en_revision', 'resuelta', 'descartada'),
+  fecha: DATE,
+  activo: BOOLEAN (para soft delete)
+}
+```
+
+**Modelo TicketSoporte:**
+```javascript
+{
+  id: INTEGER (auto-increment),
+  asunto: STRING(255),
+  descripcion: TEXT,
+  usuario: STRING(100),
+  estado: ENUM('pendiente', 'en_proceso', 'resuelto', 'cerrado'),
+  prioridad: ENUM('baja', 'media', 'alta'),
+  fecha: DATE,
+  activo: BOOLEAN (para soft delete)
+}
+```
+
+### **Controladores creados:**
+
+```
+src/infrastructure/http/controllers/admin/
+├── incidencias.controller.js    ← TU CONTROLADOR
+└── soporte.controller.js         ← TU CONTROLADOR
+```
+
+**incidencias.controller.js - Métodos:**
+- `getAll()` - Listar todas las incidencias activas
+- `getById()` - Obtener una incidencia por ID
+- `create()` - Crear nueva incidencia
+- `update()` - Actualizar incidencia existente
+- `delete()` - Borrado lógico (marca activo = false)
+
+**soporte.controller.js - Métodos:**
+- `getAll()` - Listar todos los tickets activos
+- `getById()` - Obtener un ticket por ID
+- `update()` - Actualizar ticket (cambiar estado)
+- `delete()` - Archivar ticket (marca activo = false)
+
+### **Rutas del backend:**
+
+```javascript
+// En admin.router.js (líneas 94-128)
+
+// GESTIÓN DE INCIDENCIAS
+GET    /api/admin/incidencias           // Listar todas
+GET    /api/admin/incidencias/:id       // Una por ID
+POST   /api/admin/incidencias           // Crear nueva
+PUT    /api/admin/incidencias/:id       // Actualizar
+DELETE /api/admin/incidencias/:id       // Eliminar
+
+// GESTIÓN DE SOPORTE
+GET    /api/admin/soporte               // Listar todos
+GET    /api/admin/soporte/:id           // Uno por ID
+PUT    /api/admin/soporte/:id           // Actualizar
+DELETE /api/admin/soporte/:id           // Archivar
+```
+
+---
+
+## 📚 QUÉ ESTUDIAR PARA LA EXPOSICIÓN
+
+### **1. Estructura Frontend**
+
+```
+Tu parte usa Feature-Sliced Design:
+
+app/                  ← Configuración global
+features/             ← TUS MÓDULOS:
+  ├── incidencias/    ← CRUD completo
+  └── soporte/        ← Read, Update, Delete
+shared/               ← Componentes compartidos
+services/             ← API centralizada
+```
+
+### **2. Flujo de Datos - Crear Incidencia**
+
+```
+Usuario hace clic en "+ Nueva Incidencia"
+         ↓
+Se abre modal con formulario
+         ↓
+Usuario llena: título, descripción, zona, tipo
+         ↓
+Hace clic en "Crear Incidencia"
+         ↓
+handleSubmit() en IncidenciasScreen.jsx
+         ↓
+Llama a createIncidencia(formData) de services/api.js
+         ↓
+POST /api/admin/incidencias
+         ↓
+Backend: admin.router.js recibe la petición
+         ↓
+incidencias.controller.js → create()
+         ↓
+Crea registro en tabla 'incidencias' (MySQL)
+         ↓
+Retorna { success: true, data: nuevaIncidencia }
+         ↓
+Frontend cierra modal y recarga tabla
+         ↓
+Usuario ve la nueva incidencia en la tabla
+```
+
+### **3. Flujo de Datos - Actualizar Estado de Ticket**
+
+```
+Usuario cambia dropdown de "Pendiente" a "En Proceso"
+         ↓
+onChange dispara handleUpdateEstado(id, nuevoEstado)
+         ↓
+Llama a updateTicket(id, { estado: 'en_proceso' })
+         ↓
+PUT /api/admin/soporte/:id
+         ↓
+Backend: soporte.controller.js → update()
+         ↓
+Actualiza ticket en MySQL
+         ↓
+Retorna { success: true, data: ticketActualizado }
+         ↓
+Frontend recarga tabla con nuevo estado
+```
+
+### **4. Tecnologías que usas**
+
+**Frontend:**
+- ✅ React 19 - Librería UI
+- ✅ React Hooks (useState, useEffect)
+- ✅ Framer Motion - Animaciones (opcional)
+- ✅ Fetch API - Llamadas HTTP
+
+**Backend:**
+- ✅ Express.js - Framework web
+- ✅ Sequelize - ORM para MySQL
+- ✅ Node.js - Runtime
+- ✅ MySQL - Base de datos
+
+---
+
+## 🎯 PUNTOS CLAVE PARA EXPONER
+
+### **Tu responsabilidad:**
+
+1. ✅ **Gestión de Incidencias - CRUD Completo**
+   - "Implementé el módulo de Incidencias con CRUD completo"
+   - "Los administradores pueden crear, leer, actualizar y eliminar incidencias detectadas por ONGs o autoridades"
+
+2. ✅ **Gestión de Soporte - Read, Update, Delete**
+   - "Creé el módulo de Soporte para gestionar tickets de usuarios"
+   - "Los administradores pueden ver tickets, cambiar su estado y archivar los antiguos"
+
+3. ✅ **Backend Completo**
+   - "Desarrollé los modelos Sequelize para Incidencia y TicketSoporte"
+   - "Implementé los controladores con toda la lógica de negocio"
+   - "Configuré las rutas REST en el router admin"
+
+4. ✅ **Borrado Lógico**
+   - "Implementé soft delete: no se eliminan registros, solo se marcan como inactivos"
+   - "Esto permite recuperar datos eliminados si es necesario"
+
+---
+
+## 📂 ARCHIVOS QUE DEBES CONOCER
+
+### **Frontend (LO MÁS IMPORTANTE):**
+
+```
+✅ frontend-admin/src/features/incidencias/screens/IncidenciasScreen.jsx
+✅ frontend-admin/src/features/incidencias/screens/IncidenciasScreen.css
+✅ frontend-admin/src/features/soporte/screens/SoporteScreen.jsx
+✅ frontend-admin/src/services/api.js (funciones de API que usas)
+```
+
+### **Backend (LO MÁS IMPORTANTE):**
+
+```
+✅ src/domain/models/sql/admin/incidencia.js
+✅ src/domain/models/sql/admin/ticketSoporte.js
+✅ src/infrastructure/http/controllers/admin/incidencias.controller.js
+✅ src/infrastructure/http/controllers/admin/soporte.controller.js
+✅ src/infrastructure/http/router/admin.router.js (líneas 94-128)
+```
+
+---
+
+## 🔗 CÓMO SE INTEGRA CON JOSSELYN
+
+**Josselyn hizo:**
+- Dashboard con métricas (incluyendo tus incidencias y tickets)
+- Configuración Global (3 secciones)
+
+**Tú hiciste:**
+- Gestión de Incidencias (CRUD completo)
+- Gestión de Soporte (Read, Update, Delete)
+
+**Juntos:**
+- El Dashboard de Josselyn muestra las métricas de TUS incidencias y tickets
+- Comparten el mismo Layout (sidebar)
+- Usan los mismos componentes compartidos (Card, Button, Badge)
+- El backend está integrado en el mismo proyecto
+
+---
+
+## 🎨 DIFERENCIAS CLAVE ENTRE INCIDENCIAS Y SOPORTE
+
+| Característica | Incidencias | Soporte |
+|---------------|-------------|---------|
+| **Origen** | Detectadas por ONGs/autoridades | Enviadas por usuarios |
+| **Operaciones** | CRUD completo | Read, Update, Delete |
+| **Estados** | pendiente, en_revision, resuelta, descartada | pendiente, en_proceso, resuelto, cerrado |
+| **Campos únicos** | zona, tipo | usuario, prioridad |
+| **Crear nuevos** | ✅ SÍ (modal) | ❌ NO (solo ver y gestionar) |
+
+---
+
+## ✅ CHECKLIST DE VERIFICACIÓN
+
+Antes de la exposición, verifica que sepas explicar:
+
+- [ ] ¿Qué es CRUD? (Create, Read, Update, Delete)
+- [ ] ¿Cómo se crea una incidencia? (modal → formulario → POST)
+- [ ] ¿Cómo se actualiza un ticket? (dropdown → PUT)
+- [ ] ¿Qué es borrado lógico? (marcar activo=false en vez de DELETE)
+- [ ] ¿Cuáles son los 4 estados de una incidencia?
+- [ ] ¿Cuáles son las 3 prioridades de un ticket?
+- [ ] ¿Qué endpoints del backend creaste?
+- [ ] ¿Cómo se conecta el frontend con el backend? (services/api.js)
+
+---
+
+## 💡 PREGUNTAS FRECUENTES EN EXPOSICIONES
+
+**P: ¿Por qué usaste borrado lógico?**
+R: "Para mantener un historial completo. En vez de eliminar el registro de la base de datos, solo lo marcamos como inactivo. Así podemos recuperarlo o consultarlo después si es necesario."
+
+**P: ¿Por qué Incidencias tiene CRUD completo y Soporte no?**
+R: "Las incidencias se crean desde el panel admin (detectadas por ONGs). Los tickets de soporte los crean los usuarios desde la app móvil, por eso en el admin solo los vemos y gestionamos."
+
+**P: ¿Cómo se relaciona tu módulo con el Dashboard?**
+R: "El Dashboard muestra las métricas de mis módulos: cuenta las incidencias resueltas vs reportadas y los tickets pendientes. Usa los endpoints /api/admin/metricas que consultan mis tablas."
+
+**P: ¿Qué tecnologías usaste?**
+R: "Frontend: React 19 con hooks (useState, useEffect). Backend: Node.js con Express, Sequelize ORM y MySQL. Todo con arquitectura REST."
+
+---
+
+## 📊 TABLAS DE BASE DE DATOS
+
+### **Tabla: incidencias**
+```sql
+CREATE TABLE incidencias (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  titulo VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  zona VARCHAR(100) NOT NULL,
+  tipo ENUM('accesibilidad', 'señalización', 'infraestructura', 'otro'),
+  estado ENUM('pendiente', 'en_revision', 'resuelta', 'descartada'),
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+  activo BOOLEAN DEFAULT TRUE,
+  createdAt DATETIME,
+  updatedAt DATETIME
+);
+```
+
+### **Tabla: tickets_soporte**
+```sql
+CREATE TABLE tickets_soporte (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  asunto VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  usuario VARCHAR(100) NOT NULL,
+  estado ENUM('pendiente', 'en_proceso', 'resuelto', 'cerrado'),
+  prioridad ENUM('baja', 'media', 'alta'),
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+  activo BOOLEAN DEFAULT TRUE,
+  createdAt DATETIME,
+  updatedAt DATETIME
+);
+```
+
+---
+
+**¡ÉXITO EN LA EXPOSICIÓN! 🎓💪**
+
+**Preparado por:** Claude Code
+**Para:** MALDONADO DELGADO DAVID ALEJANDRO (N°5)
+**Fecha:** 2025-12-27
