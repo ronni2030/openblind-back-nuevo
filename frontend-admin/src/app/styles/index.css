@@ -3,9 +3,12 @@
  *
  * Sistema de diseño para panel de administración
  * Paleta de colores de OpenBlind con enfoque profesional
+ * Tema oscuro moderno con animaciones suaves
  *
  * @author MOPOSITA PILATAXI JOSSELYN PAMELA (N°5)
  */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════════
    VARIABLES CSS - PALETA DE COLORES OPENBLIND
@@ -56,31 +59,33 @@
   --color-gray-800: #424242;
   --color-gray-900: #212121;
 
-  /* Colores de texto */
-  --color-text-primary: #212121;
-  --color-text-secondary: #757575;
-  --color-text-disabled: #bdbdbd;
-  --color-text-inverse: #ffffff;
+  /* Colores de texto - TEMA OSCURO */
+  --color-text-primary: #F1F5F9;     /* Texto principal claro */
+  --color-text-secondary: #CBD5E1;   /* Texto secundario */
+  --color-text-disabled: #64748B;    /* Texto desactivado */
+  --color-text-inverse: #0F172A;     /* Texto inverso */
+  --color-text-muted: #94A3B8;       /* Texto muy suave */
 
-  /* Fondos */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f5f5f5;
-  --color-bg-tertiary: #fafafa;
-  --color-bg-dark: #212121;
+  /* Fondos - TEMA OSCURO PROFESIONAL */
+  --color-bg-primary: #0F172A;     /* Fondo principal oscuro */
+  --color-bg-secondary: #1E293B;   /* Fondo secundario */
+  --color-bg-tertiary: #334155;    /* Fondo terciario */
+  --color-bg-hover: #475569;       /* Hover */
+  --color-bg-dark: #020617;        /* Muy oscuro */
 
-  /* Bordes */
-  --color-border-light: #e0e0e0;
-  --color-border-medium: #bdbdbd;
-  --color-border-dark: #757575;
+  /* Bordes - TEMA OSCURO */
+  --color-border-light: #334155;
+  --color-border-medium: #475569;
+  --color-border-dark: #64748B;
 
-  /* Sombras */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* Sombras - TEMA OSCURO (más intensas) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -2px rgb(0 0 0 / 0.15);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 10px 10px -5px rgb(0 0 0 / 0.2);
 
   /* Tipografía */
-  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-family-mono: 'Fira Code', 'Courier New', monospace;
 
@@ -151,9 +156,10 @@ html {
 body {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-base);
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.6;
   color: var(--color-text-primary);
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
   overflow-x: hidden;
 }
 
@@ -256,21 +262,22 @@ a:hover {
    ═══════════════════════════════════════════════════ */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: var(--color-bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gray-400);
+  background: var(--color-bg-tertiary);
   border-radius: var(--radius-full);
+  border: 2px solid var(--color-bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
+  background: var(--color-bg-hover);
 }
 
 /* ═══════════════════════════════════════════════════

@@ -3,6 +3,8 @@ const router = express.Router();
 
 const configuracionGlobalController = require('../controllers/admin/configuracionGlobal.controller');
 const metricasController = require('../controllers/admin/metricas.controller');
+const incidenciasController = require('../controllers/admin/incidencias.controller');
+const soporteController = require('../controllers/admin/soporte.controller');
 
 /**
  * Router de Módulo Admin
@@ -10,8 +12,11 @@ const metricasController = require('../controllers/admin/metricas.controller');
  * Agrupa todas las rutas del panel de administración:
  * - Configuración Global del Sistema
  * - Métricas y Dashboard
+ * - Gestión de Incidencias (MALDONADO DELGADO DAVID ALEJANDRO)
+ * - Gestión de Soporte (MALDONADO DELGADO DAVID ALEJANDRO)
  *
  * MOPOSITA PILATAXI JOSSELYN PAMELA (N°5)
+ * MALDONADO DELGADO DAVID ALEJANDRO (N°5)
  */
 
 // ═══════════════════════════════════════════════════
@@ -90,5 +95,40 @@ router.get('/metricas/incidencias', metricasController.getIncidencias);
  * Estadísticas de uso de módulos (navegación, tarjeta, contactos)
  */
 router.get('/metricas/uso-modulos', metricasController.getUsoModulos);
+
+// ═══════════════════════════════════════════════════
+// GESTIÓN DE INCIDENCIAS (David Maldonado)
+// ═══════════════════════════════════════════════════
+
+/** GET /api/admin/incidencias - Listar todas las incidencias */
+router.get('/incidencias', incidenciasController.getAll);
+
+/** GET /api/admin/incidencias/:id - Obtener incidencia por ID */
+router.get('/incidencias/:id', incidenciasController.getById);
+
+/** POST /api/admin/incidencias - Crear nueva incidencia */
+router.post('/incidencias', incidenciasController.create);
+
+/** PUT /api/admin/incidencias/:id - Actualizar incidencia */
+router.put('/incidencias/:id', incidenciasController.update);
+
+/** DELETE /api/admin/incidencias/:id - Eliminar incidencia */
+router.delete('/incidencias/:id', incidenciasController.delete);
+
+// ═══════════════════════════════════════════════════
+// GESTIÓN DE SOPORTE (David Maldonado)
+// ═══════════════════════════════════════════════════
+
+/** GET /api/admin/soporte - Listar todos los tickets */
+router.get('/soporte', soporteController.getAll);
+
+/** GET /api/admin/soporte/:id - Obtener ticket por ID */
+router.get('/soporte/:id', soporteController.getById);
+
+/** PUT /api/admin/soporte/:id - Actualizar ticket */
+router.put('/soporte/:id', soporteController.update);
+
+/** DELETE /api/admin/soporte/:id - Archivar ticket */
+router.delete('/soporte/:id', soporteController.delete);
 
 module.exports = router;

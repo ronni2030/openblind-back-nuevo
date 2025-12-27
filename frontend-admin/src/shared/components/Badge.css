@@ -1,0 +1,77 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-3);
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ═══════ TAMAÑOS ═══════ */
+
+.badge--sm {
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-2);
+}
+
+.badge--md {
+  font-size: var(--font-size-xs);
+}
+
+.badge--lg {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+/* ═══════ VARIANTES ═══════ */
+
+.badge--success {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--color-success-500);
+  border: 1px solid var(--color-success-500);
+}
+
+.badge--warning {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--color-warning-500);
+  border: 1px solid var(--color-warning-500);
+}
+
+.badge--danger {
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--color-error-500);
+  border: 1px solid var(--color-error-500);
+}
+
+.badge--info {
+  background: rgba(3, 169, 244, 0.2);
+  color: var(--color-info-500);
+  border: 1px solid var(--color-info-500);
+}
+
+.badge--primary {
+  background: rgba(33, 150, 243, 0.2);
+  color: var(--color-primary-400);
+  border: 1px solid var(--color-primary-500);
+}
+
+.badge--neutral {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
+}
+
+/* ═══════ ICONOS ═══════ */
+
+.badge__icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+}
+
+.badge__text {
+  line-height: 1;
+}
