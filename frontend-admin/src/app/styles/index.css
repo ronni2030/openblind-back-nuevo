@@ -15,17 +15,17 @@
    ═══════════════════════════════════════════════════ */
 
 :root {
-  /* Colores primarios - Azules (navegación, accesibilidad) */
-  --color-primary-50: #e3f2fd;
-  --color-primary-100: #bbdefb;
-  --color-primary-200: #90caf9;
-  --color-primary-300: #64b5f6;
-  --color-primary-400: #42a5f5;
-  --color-primary-500: #2196f3;
-  --color-primary-600: #1e88e5;
-  --color-primary-700: #1976d2;
-  --color-primary-800: #1565c0;
-  --color-primary-900: #0d47a1;
+  /* Colores primarios - Púrpura OpenBlind (navegación, accesibilidad) */
+  --color-primary-50: #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a855f7;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7e22ce;
+  --color-primary-800: #6b21a8;
+  --color-primary-900: #581c87;
 
   /* Colores secundarios - Verdes (éxito, seguridad) */
   --color-success-50: #e8f5e9;

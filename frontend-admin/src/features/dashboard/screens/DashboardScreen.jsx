@@ -27,6 +27,20 @@ export default function DashboardScreen() {
       }
     } catch (error) {
       console.error('Error cargando métricas:', error);
+      // Mock data para desarrollo
+      setMetrics({
+        usuariosActivos: 1247,
+        rutasPorDia: 342,
+        incidenciasReportadas: 45,
+        incidenciasResueltas: 38,
+        ticketsPendientes: 12,
+        usoModulos: {
+          'Navegación': 856,
+          'Lugares Favoritos': 623,
+          'Contactos': 445,
+          'Configuración': 312,
+        }
+      });
     } finally {
       setLoading(false);
     }

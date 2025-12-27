@@ -14,7 +14,13 @@ export default function Layout() {
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <div className="logo-icon">OB</div>
+            <div className="logo-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="#9333ea"/>
+                <ellipse cx="12" cy="12" rx="6" ry="4" fill="white"/>
+                <circle cx="12" cy="12" r="2" fill="#9333ea"/>
+              </svg>
+            </div>
             <div className="logo-text">
               <h1>OpenBlind</h1>
               <p>Admin Panel</p>
