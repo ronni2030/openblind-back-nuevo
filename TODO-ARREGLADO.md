@@ -213,11 +213,9 @@ He probado que TODO funciona:
 
 ### **Backend:**
 - ✅ `src/infrastructure/http/controllers/admin/configuracionGlobal.controller.js`
-- ✅ `src/infrastructure/http/controllers/admin/metricas.controller.js`
 - ✅ `src/domain/models/sql/configuracionGlobal.js`
 
 ### **Frontend:**
-- ✅ `frontend-admin/src/features/dashboard/screens/DashboardScreen.jsx`
 - ✅ `frontend-admin/src/features/configuracion/screens/ConfigAccesibilidadScreen.jsx`
 - ✅ `frontend-admin/src/features/configuracion/screens/ConfigNavegacionScreen.jsx`
 - ✅ `frontend-admin/src/features/configuracion/screens/ConfigPrivacidadScreen.jsx`
@@ -226,7 +224,6 @@ He probado que TODO funciona:
 ```
 GET  /api/admin/configuracion           - Obtener config global
 PUT  /api/admin/configuracion           - Actualizar config
-GET  /api/admin/metricas/resumen        - Dashboard métricas
 ```
 
 ---
@@ -234,17 +231,21 @@ GET  /api/admin/metricas/resumen        - Dashboard métricas
 ## 📋 **PARTE DE DAVID:**
 
 ### **Backend:**
+- ✅ `src/infrastructure/http/controllers/admin/metricas.controller.js`
 - ✅ `src/infrastructure/http/controllers/admin/incidencias.controller.js`
 - ✅ `src/infrastructure/http/controllers/admin/soporte.controller.js`
 - ✅ `src/domain/models/sql/admin/incidencia.js`
 - ✅ `src/domain/models/sql/admin/ticketSoporte.js`
 
 ### **Frontend:**
+- ✅ `frontend-admin/src/features/dashboard/screens/DashboardScreen.jsx`
 - ✅ `frontend-admin/src/features/incidencias/screens/IncidenciasScreen.jsx`
 - ✅ `frontend-admin/src/features/soporte/screens/SoporteScreen.jsx`
 
 ### **Endpoints:**
 ```
+GET  /api/admin/metricas/resumen        - Dashboard métricas
+
 GET    /api/admin/incidencias           - Listar incidencias
 POST   /api/admin/incidencias           - Crear incidencia
 PUT    /api/admin/incidencias/:id       - Actualizar
@@ -270,7 +271,7 @@ DELETE /api/admin/soporte/:id           - Archivar
 ## 🎓 **PARA LA EXPOSICIÓN:**
 
 ### **Demostrar:**
-1. **Dashboard** (Josselyn) - Mostrar las 4 métricas
+1. **Dashboard** (David) - Mostrar las 4 métricas
 2. **Crear Incidencia** (David) - CRUD completo
 3. **Cambiar estado de Ticket** (David) - Update
 4. **Configurar Accesibilidad** (Josselyn) - Guardar cambios
