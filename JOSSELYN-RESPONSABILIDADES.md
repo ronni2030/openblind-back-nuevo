@@ -1,36 +1,13 @@
 # 👩‍💻 JOSSELYN MOPOSITA - Responsabilidades
 
 **Estudiante:** MOPOSITA PILATAXI JOSSELYN PAMELA (N°5)
-**Módulo:** Dashboard + Configuración Global
+**Módulo:** Configuración Global (3 secciones)
 
 ---
 
 ## 📋 TU PARTE DEL PROYECTO
 
-### **1️⃣ Dashboard (Métricas Principales)**
-
-**Ubicación Frontend:**
-```
-frontend-admin/src/features/dashboard/screens/
-├── DashboardScreen.jsx       ← TU CÓDIGO
-└── DashboardScreen.css       ← TU CÓDIGO
-```
-
-**Lo que hace:**
-- Muestra 4 tarjetas con métricas principales:
-  - Usuarios Activos
-  - Rutas por Día
-  - Incidencias (Resueltas/Reportadas)
-  - Tickets Pendientes
-- Gráfico de uso de módulos (navegación, tarjeta, contactos)
-- Botón de actualizar para refrescar datos
-
-**Endpoints que usa:**
-- `GET /api/admin/metricas/resumen` - Obtiene todas las métricas
-
----
-
-### **2️⃣ Configuración Global - Accesibilidad**
+### **1️⃣ Configuración Global - Accesibilidad**
 
 **Ubicación Frontend:**
 ```
@@ -56,7 +33,7 @@ frontend-admin/src/features/configuracion/screens/
 
 ---
 
-### **3️⃣ Configuración Global - Navegación**
+### **2️⃣ Configuración Global - Navegación**
 
 **Ubicación Frontend:**
 ```
@@ -65,7 +42,7 @@ frontend-admin/src/features/configuracion/screens/
 ```
 
 **Lo que hace:**
-- **Rutas:**
+- **Preferencias globales de navegación:**
   - Longitud máxima de ruta (1-50 km)
   - Sugerir paradas seguras (sí/no)
 - **Instrucciones:**
@@ -80,7 +57,7 @@ frontend-admin/src/features/configuracion/screens/
 
 ---
 
-### **4️⃣ Configuración Global - Privacidad**
+### **3️⃣ Configuración Global - Geolocalización y Privacidad**
 
 **Ubicación Frontend:**
 ```
@@ -90,7 +67,7 @@ frontend-admin/src/features/configuracion/screens/
 
 **Lo que hace:**
 - **Ubicación y Rastreo:**
-  - Retención de historial (7, 14, 30, 90 días)
+  - Política de retención de historial (7, 14, 30, 90 días)
   - Tracking en segundo plano (on/off)
   - Compartir ubicación con contactos (on/off)
 - **Historial y Datos:**
@@ -110,112 +87,112 @@ frontend-admin/src/features/configuracion/screens/
 frontend-admin/src/shared/components/
 ├── Card.jsx       ← Tarjetas con animaciones
 ├── Button.jsx     ← Botones con estilos
-├── Badge.jsx      ← Etiquetas de estado
 └── Layout.jsx     ← Sidebar + contenido
 ```
 
 **Cómo usarlos en tu código:**
 ```javascript
-import { Card, Button, Badge } from '@shared/components';
+import { Card, Button } from '@shared/components';
 
 // Ejemplo de uso:
-<Card title="Mi Tarjeta">
+<Card title="Configuración de Accesibilidad">
   <p>Contenido aquí</p>
 </Card>
 
-<Button variant="primary" onClick={handleClick}>
-  Guardar
+<Button variant="primary" onClick={handleSave}>
+  💾 Guardar Cambios
 </Button>
-
-<Badge variant="success">Activo</Badge>
 ```
 
 ---
 
 ## ⚙️ BACKEND - TU PARTE
 
-### **Controladores creados previamente:**
+### **Controladores:**
 
 ```
 src/infrastructure/http/controllers/admin/
-├── configuracionGlobal.controller.js    ← TU BACKEND
-└── metricas.controller.js               ← TU BACKEND
+└── configuracionGlobal.controller.js    ← TU BACKEND
 ```
 
-### **Modelos creados previamente:**
+**Métodos que tienes:**
+- `get()` - Obtener configuración global
+- `update()` - Actualizar configuración completa
+- `updateField()` - Actualizar un solo campo
+- `reset()` - Resetear a defaults
+- `delete()` - Soft delete
+- `restore()` - Restaurar
+
+### **Modelo:**
 
 ```
 src/domain/models/sql/
 └── configuracionGlobal.js    ← Modelo de configuración
 ```
 
+**Campos del modelo (17 campos en total):**
+
+**Accesibilidad:**
+- `tamanoFuente`, `temaContraste`, `idioma`
+- `velocidadVoz`, `volumenVoz`, `feedbackHaptico`, `nivelDetalle`
+
+**Navegación:**
+- `longitudMaxima`, `paradaSegura`, `frecuenciaInstrucciones`
+- `tipoInstruccion`, `alertaDesvio`, `alertaObstaculo`
+
+**Privacidad:**
+- `retencionUbicacion`, `trackingBackground`, `compartirUbicacion`
+- `guardarHistorial`, `permitirAnonimo`
+
 ### **Rutas del backend:**
 
 ```javascript
 // En admin.router.js
 
-// CONFIGURACIÓN GLOBAL
+// CONFIGURACIÓN GLOBAL (TU PARTE)
 GET    /api/admin/configuracion           // Obtener config
 PUT    /api/admin/configuracion           // Actualizar config completa
 PATCH  /api/admin/configuracion/field     // Actualizar un campo
 POST   /api/admin/configuracion/reset     // Resetear a defaults
 DELETE /api/admin/configuracion           // Soft delete
 POST   /api/admin/configuracion/restore   // Restaurar
-
-// MÉTRICAS
-GET /api/admin/metricas/resumen          // Resumen del dashboard
-GET /api/admin/metricas/usuarios         // Métricas de usuarios
-GET /api/admin/metricas/rutas            // Métricas de rutas
-GET /api/admin/metricas/incidencias      // Métricas de incidencias
-GET /api/admin/metricas/uso-modulos      // Uso de módulos
 ```
 
 ---
 
 ## 📚 QUÉ ESTUDIAR PARA LA EXPOSICIÓN
 
-### **1. Estructura Frontend**
+### **1. Flujo de Datos**
 
 ```
-Tu parte usa Feature-Sliced Design:
-
-app/                  ← Configuración global
-features/             ← TUS MÓDULOS:
-  ├── dashboard/      ← Dashboard con métricas
-  └── configuracion/  ← 3 pantallas de config
-shared/               ← Componentes compartidos
-services/             ← API centralizada
-```
-
-### **2. Flujo de Datos**
-
-```
-Usuario hace clic en "Guardar"
+Usuario cambia "Tamaño de fuente" a "Large"
          ↓
 ConfigAccesibilidadScreen.jsx (frontend)
          ↓
-handleSave() llama a updateConfiguracionGlobal()
+handleSave() actualiza state local
+         ↓
+Llama a updateConfiguracionGlobal(config)
          ↓
 services/api.js hace PUT /api/admin/configuracion
          ↓
 Backend recibe en admin.router.js
          ↓
-configuracionGlobal.controller.js procesa
+configuracionGlobal.controller.js → update()
          ↓
 Actualiza ConfiguracionGlobal en MySQL
          ↓
-Retorna respuesta { success: true }
+Retorna { success: true, data: {...} }
          ↓
 Frontend muestra "Configuración guardada"
 ```
 
-### **3. Tecnologías que usas**
+### **2. Tecnologías que usas**
 
 **Frontend:**
 - ✅ React 19 - Librería UI
-- ✅ Framer Motion - Animaciones
-- ✅ CSS Variables - Tema oscuro
+- ✅ React Hooks (useState, useEffect)
 - ✅ Fetch API - Llamadas HTTP
+- ✅ CSS Variables - Tema oscuro
 
 **Backend:**
 - ✅ Express.js - Framework web
@@ -228,20 +205,21 @@ Frontend muestra "Configuración guardada"
 
 ### **Tu responsabilidad:**
 
-1. ✅ **Dashboard con 4 métricas principales**
-   - "Implementé el dashboard que muestra usuarios activos, rutas por día, incidencias y tickets en tarjetas animadas"
-
-2. ✅ **3 Pantallas de Configuración Global**
-   - "Creé las 3 secciones de configuración: Accesibilidad, Navegación y Privacidad"
+1. ✅ **3 Pantallas de Configuración Global**
+   - "Implementé las 3 secciones de configuración: Accesibilidad, Navegación y Privacidad"
    - "Estos valores son los que heredan los nuevos usuarios al registrarse"
 
-3. ✅ **Arquitectura Modular Funcional**
-   - "Utilicé Feature-Sliced Design con 3 capas principales"
-   - "Cada feature tiene su propia carpeta con screens, components y services"
+2. ✅ **Configuración de Accesibilidad**
+   - "Permite configurar el tamaño de fuente, tema de contraste, idioma y parámetros de voz"
+   - "También incluye feedback háptico y nivel de detalle de las instrucciones"
 
-4. ✅ **Diseño Profesional**
-   - "Implementé un tema oscuro moderno con paleta de colores profesional"
-   - "Usé animaciones suaves con Framer Motion"
+3. ✅ **Configuración de Navegación**
+   - "Controla la longitud máxima de rutas, paradas seguras y frecuencia de instrucciones"
+   - "Los usuarios nuevos heredan estos valores por defecto"
+
+4. ✅ **Configuración de Privacidad**
+   - "Gestiona la política de retención de ubicaciones y permisos de tracking"
+   - "Incluye control de historial y modo anónimo"
 
 ---
 
@@ -250,21 +228,19 @@ Frontend muestra "Configuración guardada"
 ### **Frontend (LO MÁS IMPORTANTE):**
 
 ```
-✅ frontend-admin/src/features/dashboard/screens/DashboardScreen.jsx
 ✅ frontend-admin/src/features/configuracion/screens/ConfigAccesibilidadScreen.jsx
 ✅ frontend-admin/src/features/configuracion/screens/ConfigNavegacionScreen.jsx
 ✅ frontend-admin/src/features/configuracion/screens/ConfigPrivacidadScreen.jsx
-✅ frontend-admin/src/app/styles/index.css (tema oscuro)
-✅ frontend-admin/src/services/api.js (cliente HTTP)
+✅ frontend-admin/src/features/configuracion/screens/ConfigScreen.css (estilos compartidos)
+✅ frontend-admin/src/services/api.js (funciones: getConfiguracionGlobal, updateConfiguracionGlobal)
 ```
 
 ### **Backend (COMPLEMENTARIO):**
 
 ```
 ✅ src/infrastructure/http/controllers/admin/configuracionGlobal.controller.js
-✅ src/infrastructure/http/controllers/admin/metricas.controller.js
 ✅ src/domain/models/sql/configuracionGlobal.js
-✅ src/infrastructure/http/router/admin.router.js (líneas 22-67, 93-97)
+✅ src/infrastructure/http/router/admin.router.js (líneas 22-67)
 ```
 
 ---
@@ -272,17 +248,17 @@ Frontend muestra "Configuración guardada"
 ## 🔗 CÓMO SE INTEGRA CON DAVID
 
 **David hizo:**
+- Dashboard Admin (métricas)
 - Gestión de Incidencias (CRUD completo)
 - Gestión de Soporte (Read, Update, Delete)
 
 **Tú hiciste:**
-- Dashboard que muestra las métricas (incluyendo incidencias de David)
 - Configuración Global (3 secciones)
 
 **Juntos:**
-- El Dashboard muestra las incidencias y tickets que David gestiona
 - Comparten el mismo Layout (sidebar)
-- Usan los mismos componentes compartidos (Card, Button, Badge)
+- Usan los mismos componentes compartidos (Card, Button)
+- El backend está integrado en el mismo proyecto
 
 ---
 
@@ -290,14 +266,13 @@ Frontend muestra "Configuración guardada"
 
 Antes de la exposición, verifica que sepas explicar:
 
-- [ ] ¿Qué hace el Dashboard?
 - [ ] ¿Qué configuraciones hay en Accesibilidad?
 - [ ] ¿Qué configuraciones hay en Navegación?
 - [ ] ¿Qué configuraciones hay en Privacidad?
-- [ ] ¿Qué es Feature-Sliced Design?
-- [ ] ¿Cuáles son las 3 capas principales? (app, features, shared)
+- [ ] ¿Para qué sirve la configuración global?
 - [ ] ¿Cómo se conecta el frontend con el backend? (services/api.js)
 - [ ] ¿Qué endpoints del backend usas?
+- [ ] ¿Qué pasa cuando guardas cambios?
 
 ---
 
@@ -306,3 +281,4 @@ Antes de la exposición, verifica que sepas explicar:
 **Preparado por:** Claude Code
 **Para:** MOPOSITA PILATAXI JOSSELYN PAMELA (N°5)
 **Fecha:** 2025-12-27
+**Corrección:** Dashboard es de DAVID, no tuyo
