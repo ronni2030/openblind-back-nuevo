@@ -278,6 +278,8 @@ app.use('/contactos-emergencia', require('./src/infrastructure/http/router/conta
 app.use('/contactos', require('./src/infrastructure/http/router/contactoEmergencia.router'));
 // Ruta de configuración de usuario
 app.use('/api/configuracion', require('./src/infrastructure/http/router/configuracion.router'));
+// Ruta de panel de administración (Dashboard + Configuración Global)
+app.use('/api/admin', require('./src/infrastructure/http/router/admin.router'));
 
 // Configurar variables globales
 app.use((req, res, next) => {
