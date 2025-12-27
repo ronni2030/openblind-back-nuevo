@@ -6,7 +6,11 @@
  * @author MOPOSITA PILATAXI JOSSELYN PAMELA (N°5)
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8888';
+// URL del backend principal (estructura-hexagonal)
+// IMPORTANTE: Cambiar esta URL según tu entorno:
+// - Desarrollo local: 'http://localhost:8888'
+// - Producción: 'https://api.openblind.com' (ejemplo)
+const API_URL = 'http://localhost:8888';
 
 // ═══════════════════════════════════════════════════
 // CONFIGURACIÓN GLOBAL

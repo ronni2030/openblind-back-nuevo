@@ -58,16 +58,12 @@ cd frontend-admin
 npm install
 ```
 
-### 2. Configurar variables de entorno
+### 2. Configurar URL del backend (si es necesario)
 
-```bash
-cp .env.example .env
-```
+Si necesitas cambiar la URL del backend, editar: `src/shared/api/adminApi.js`
 
-Editar `.env`:
-
-```env
-VITE_API_URL=http://localhost:8888
+```javascript
+const API_URL = 'http://localhost:8888'; // Cambiar aquí si es necesario
 ```
 
 **IMPORTANTE:** El frontend se conecta al **backend principal** (`estructura-hexagonal/`) en `/api/admin`, NO a un backend separado.
