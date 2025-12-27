@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Badge } from '@shared/components';
 import { getTickets, updateTicket, deleteTicket } from '@services/api';
-import '../incidencias/screens/IncidenciasScreen.css';
+import './SoporteScreen.css';
 
 export default function SoporteScreen() {
   const [tickets, setTickets] = useState([]);
@@ -72,7 +72,7 @@ export default function SoporteScreen() {
   };
 
   return (
-    <div className="incidencias">
+    <div className="soporte">
       <div className="page-header">
         <div>
           <h1>Gestión de Soporte</h1>
