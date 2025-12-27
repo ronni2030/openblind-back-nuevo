@@ -1,4 +1,4 @@
-const Incidencia = require('../../../domain/models/sql/admin/incidencia');
+const Incidencia = require('../../../../domain/models/sql/admin/incidencia');
 
 const incidenciasController = {};
 

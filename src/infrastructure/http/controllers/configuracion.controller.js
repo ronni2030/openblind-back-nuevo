@@ -1,4 +1,4 @@
-const Configuracion = require('../../domain/models/sql/configuracion');
+const Configuracion = require('../../../domain/models/sql/configuracion');
 
 /**
  * CONTROLLER: CONFIGURACIÓN

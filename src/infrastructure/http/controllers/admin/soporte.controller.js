@@ -1,4 +1,4 @@
-const TicketSoporte = require('../../../domain/models/sql/admin/ticketSoporte');
+const TicketSoporte = require('../../../../domain/models/sql/admin/ticketSoporte');
 
 const soporteController = {};
 
