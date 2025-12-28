@@ -6,11 +6,13 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@shared/components';
 import { getMetricsResumen } from '@services/api';
 import './DashboardScreen.css';
 
 export default function DashboardScreen() {
+  const navigate = useNavigate();
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -194,16 +196,22 @@ export default function DashboardScreen() {
             title="Incidencias Pendientes"
             value={metrics?.incidenciasPendientes || 0}
             subtitle={`${metrics?.incidenciasResueltas || 0} resueltas`}
+            onClick={() => navigate('/incidencias')}
+            clickable
           />
           <MetricCardSmall
             title="Tickets Pendientes"
             value={metrics?.ticketsPendientes || 0}
             subtitle={`${metrics?.ticketsResueltos || 0} resueltos`}
+            onClick={() => navigate('/soporte')}
+            clickable
           />
           <MetricCardSmall
             title="En Proceso"
             value={metrics?.ticketsEnProceso || 0}
             subtitle="Tickets activos"
+            onClick={() => navigate('/soporte')}
+            clickable
           />
         </div>
       </div>
@@ -216,12 +224,37 @@ export default function DashboardScreen() {
             title="Configuraciones Activas"
             value={metrics?.configuracionesActivas || 0}
             subtitle="Accesibilidad, Navegación, Privacidad"
+            onClick={() => navigate('/configuracion/accesibilidad')}
+            clickable
           />
           <MetricCardSmall
             title="Usuarios con Config Personalizada"
             value={metrics?.usuariosConConfigPersonalizada || 0}
             subtitle="Han modificado valores por defecto"
+            onClick={() => navigate('/configuracion/accesibilidad')}
+            clickable
           />
+        </div>
+        {/* Accesos rápidos a las 3 pantallas de configuración */}
+        <div className="config-quick-links">
+          <button
+            className="config-link-btn"
+            onClick={() => navigate('/configuracion/accesibilidad')}
+          >
+            🎯 Accesibilidad
+          </button>
+          <button
+            className="config-link-btn"
+            onClick={() => navigate('/configuracion/navegacion')}
+          >
+            🧭 Navegación
+          </button>
+          <button
+            className="config-link-btn"
+            onClick={() => navigate('/configuracion/privacidad')}
+          >
+            🔒 Privacidad
+          </button>
         </div>
       </div>
 
@@ -282,9 +315,13 @@ function MetricCard({ title, value, icon, color, trend, subtitle }) {
   );
 }
 
-function MetricCardSmall({ title, value, subtitle }) {
+function MetricCardSmall({ title, value, subtitle, onClick, clickable }) {
   return (
-    <div className="metric-card-small">
+    <div
+      className={`metric-card-small ${clickable ? 'metric-card-clickable' : ''}`}
+      onClick={onClick}
+      style={clickable ? { cursor: 'pointer' } : {}}
+    >
       <h3 className="metric-small-title">{title}</h3>
       <p className="metric-small-value">{value}</p>
       {subtitle && <p className="metric-small-subtitle">{subtitle}</p>}
