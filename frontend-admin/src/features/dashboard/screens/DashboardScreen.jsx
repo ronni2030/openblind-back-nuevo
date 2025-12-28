@@ -6,7 +6,6 @@
  */
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Card } from '@shared/components';
 import { getMetricsResumen } from '@services/api';
 import './DashboardScreen.css';
@@ -127,12 +126,7 @@ export default function DashboardScreen() {
 
 function MetricCard({ title, value, icon, color, trend, subtitle }) {
   return (
-    <motion.div
-      className={`metric-card metric-card--${color}`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className={`metric-card metric-card--${color}`}>
       <div className="metric-icon">{icon}</div>
       <div className="metric-content">
         <p className="metric-title">{title}</p>
@@ -140,6 +134,6 @@ function MetricCard({ title, value, icon, color, trend, subtitle }) {
         {subtitle && <p className="metric-subtitle">{subtitle}</p>}
         {trend && <span className="metric-trend">{trend}</span>}
       </div>
-    </motion.div>
+    </div>
   );
 }
