@@ -94,19 +94,41 @@ src/domain/models/sql/
 **Archivo:** `frontend-admin/src/features/dashboard/screens/DashboardScreen.jsx`
 
 **Qué hace:**
-- Muestra métricas principales del sistema:
-  - 👥 **Usuarios Activos** - Total de usuarios registrados activos
-  - 🗺️ **Rutas/Día** - Promedio de rutas generadas por día
-  - ⚠️ **Incidencias** - Resueltas vs Reportadas
-  - 🎫 **Tickets Soporte** - Tickets pendientes de respuesta
-- Gráfico de uso de módulos (Navegación, Lugares, Contactos, Configuración)
-- Botón de actualizar datos
+- **Vista general completa de TODO el sistema OpenBlind Admin**
+- Muestra métricas de **TODOS los módulos**, incluidos los de tus compañeros:
+
+**📊 Resumen Principal (4 tarjetas grandes):**
+  - 👥 **Usuarios Activos** - Total usuarios activos/registrados
+  - 🗺️ **Rutas/Día** - Rutas generadas + completadas
+  - ⚠️ **Incidencias** - Pendientes + resueltas (David)
+  - 🎫 **Tickets Soporte** - Pendientes + en proceso (David)
+
+**👤 Sección Angelo Vera - Gestión de Usuarios y Lugares:**
+  - Total usuarios, nuevos hoy, bloqueados
+  - Lugares favoritos guardados
+  - Zonas seguras configuradas
+  - Puntos críticos marcados
+
+**📍 Sección Oscar Soria - Contactos y Navegación:**
+  - Contactos de emergencia registrados
+  - Rutas totales y completadas
+  - Promedio de rutas por día
+
+**🛠️ Sección David Maldonado - Incidencias y Soporte:**
+  - Incidencias pendientes vs resueltas
+  - Tickets pendientes vs resueltos
+  - Tickets en proceso
+
+**📈 Uso de Módulos (gráfico de barras):**
+  - Navegación, Lugares Favoritos, Contactos
+  - Tarjeta ID, Configuración, Soporte
+  - Con número de usos por módulo
 
 **Backend asociado:**
 - `src/infrastructure/http/controllers/admin/metricas.controller.js`
 
 **API endpoint:**
-- `GET /api/admin/metricas/resumen` - Obtener todas las métricas
+- `GET /api/admin/metricas/resumen` - Obtener todas las métricas del sistema completo
 
 ---
 
@@ -358,9 +380,11 @@ http://localhost:5174
 - "Uso un solo controller backend que gestiona toda la configuración"
 
 ### **Qué debe explicar David:**
-- "Yo hice el **Dashboard con métricas** del sistema"
-- "La **Gestión de Incidencias** con CRUD completo"
-- "Y la **Gestión de Soporte** para atender tickets"
+- "Yo hice el **Dashboard Admin** que muestra métricas de **TODO el sistema**"
+- "El Dashboard tiene secciones para cada módulo: Usuarios, Lugares, Contactos, Navegación, Incidencias y Soporte"
+- "Así todos pueden ver el estado general del sistema en un solo lugar"
+- "También hice la **Gestión de Incidencias** con CRUD completo"
+- "Y la **Gestión de Soporte** para atender tickets de usuarios"
 - "Cada módulo tiene su propio controller y modelo"
 
 ### **Qué explicar juntos:**
