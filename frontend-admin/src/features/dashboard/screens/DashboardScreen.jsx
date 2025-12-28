@@ -57,6 +57,15 @@ export default function DashboardScreen() {
         ticketsEnProceso: 8,
         ticketsResueltos: 234,
 
+        // Josselyn - Configuración Global
+        configuracionesActivas: 3,
+        usuariosConConfigPersonalizada: 456,
+
+        // Ronny - Tarjeta ID y Notificaciones
+        tarjetasIDGeneradas: 1089,
+        notificacionesEnviadas: 5432,
+        plantillasNotificaciones: 12,
+
         // Uso de módulos (todos)
         usoModulos: {
           'Navegación': 856,
@@ -197,6 +206,45 @@ export default function DashboardScreen() {
             title="En Proceso"
             value={metrics?.ticketsEnProceso || 0}
             subtitle="Tickets activos"
+          />
+        </div>
+      </div>
+
+      {/* Sección Josselyn - Configuración Global */}
+      <div className="dashboard-section">
+        <h2 className="section-title">⚙️ Configuración Global (Josselyn Moposita)</h2>
+        <div className="metrics-grid-small">
+          <MetricCardSmall
+            title="Configuraciones Activas"
+            value={metrics?.configuracionesActivas || 0}
+            subtitle="Accesibilidad, Navegación, Privacidad"
+          />
+          <MetricCardSmall
+            title="Usuarios con Config Personalizada"
+            value={metrics?.usuariosConConfigPersonalizada || 0}
+            subtitle="Han modificado valores por defecto"
+          />
+        </div>
+      </div>
+
+      {/* Sección Ronny - Tarjeta ID y Notificaciones */}
+      <div className="dashboard-section">
+        <h2 className="section-title">📇 Tarjeta ID y Notificaciones (Ronny Villa)</h2>
+        <div className="metrics-grid-small">
+          <MetricCardSmall
+            title="Tarjetas ID Generadas"
+            value={metrics?.tarjetasIDGeneradas || 0}
+            subtitle="Con código QR activo"
+          />
+          <MetricCardSmall
+            title="Notificaciones Enviadas"
+            value={metrics?.notificacionesEnviadas || 0}
+            subtitle="Push, email, SMS"
+          />
+          <MetricCardSmall
+            title="Plantillas Activas"
+            value={metrics?.plantillasNotificaciones || 0}
+            subtitle="Templates configurados"
           />
         </div>
       </div>
