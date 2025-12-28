@@ -119,6 +119,16 @@ src/domain/models/sql/
   - Tickets pendientes vs resueltos
   - Tickets en proceso
 
+**⚙️ Sección Josselyn Moposita - Configuración Global:**
+  - Configuraciones activas (3: Accesibilidad, Navegación, Privacidad)
+  - Usuarios con configuración personalizada
+  - Han modificado valores por defecto
+
+**📇 Sección Ronny Villa - Tarjeta ID y Notificaciones:**
+  - Tarjetas ID generadas con QR activo
+  - Notificaciones enviadas (push, email, SMS)
+  - Plantillas de notificaciones activas
+
 **📈 Uso de Módulos (gráfico de barras):**
   - Navegación, Lugares Favoritos, Contactos
   - Tarjeta ID, Configuración, Soporte
@@ -292,23 +302,26 @@ server.js                                 🤝 COMPARTIDO
 
 ## 📊 **RESUMEN NUMÉRICO:**
 
-### **Josselyn:**
+### **Josselyn (tú):**
 - 3 pantallas de configuración
 - 1 backend controller compartido
 - 1 modelo de base de datos
 - 2 endpoints API (GET, PUT)
+- ✅ **Tu sección en el Dashboard** con 2 métricas
 
 ### **David:**
 - 3 módulos completos (Dashboard, Incidencias, Soporte)
+- **Dashboard con secciones de TODOS (5 estudiantes)**
 - 3 backend controllers
 - 2 modelos de base de datos
 - 7 endpoints API total
 
-### **Total Proyecto:**
+### **Total Proyecto (tu parte + David):**
 - ✅ 6 pantallas funcionales
 - ✅ 4 controllers backend
 - ✅ 3 modelos de datos
 - ✅ 9 endpoints API
+- ✅ **Dashboard con 5 secciones** (Angelo, Oscar, David, Josselyn, Ronny)
 - ✅ Arquitectura hexagonal
 - ✅ Feature-Sliced Design
 - ✅ Diseño profesional púrpura OpenBlind
@@ -381,8 +394,13 @@ http://localhost:5174
 
 ### **Qué debe explicar David:**
 - "Yo hice el **Dashboard Admin** que muestra métricas de **TODO el sistema**"
-- "El Dashboard tiene secciones para cada módulo: Usuarios, Lugares, Contactos, Navegación, Incidencias y Soporte"
-- "Así todos pueden ver el estado general del sistema en un solo lugar"
+- "El Dashboard tiene secciones para **TODOS los estudiantes**:"
+  - "Angelo: Usuarios y Lugares"
+  - "Oscar: Contactos y Navegación"
+  - "Yo (David): Incidencias y Soporte"
+  - "Josselyn: Configuración Global"
+  - "Ronny: Tarjeta ID y Notificaciones"
+- "Así todos pueden ver el estado completo de OpenBlind en un solo lugar"
 - "También hice la **Gestión de Incidencias** con CRUD completo"
 - "Y la **Gestión de Soporte** para atender tickets de usuarios"
 - "Cada módulo tiene su propio controller y modelo"
