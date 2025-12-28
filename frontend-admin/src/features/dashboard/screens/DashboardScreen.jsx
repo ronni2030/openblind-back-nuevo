@@ -22,60 +22,58 @@ export default function DashboardScreen() {
     try {
       const response = await getMetricsResumen();
       if (response.success) {
-        setMetrics(response.data);
+        // Mapear datos del backend al formato esperado por el frontend
+        const data = response.data;
+
+        setMetrics({
+          // Angelo - Gestión de Usuarios
+          totalUsuarios: data.usuarios?.total || 0,
+          usuariosActivos: data.usuarios?.activos || 0,
+          usuariosNuevosHoy: data.usuarios?.nuevosHoy || 0,
+          usuariosBloqueados: data.usuarios?.bloqueados || 0,
+
+          // Angelo - Gestión de Lugares y Zonas (cuando existan en backend)
+          lugaresFavoritos: data.lugaresFavoritos || 0,
+          zonasSeguras: data.zonasSeguras || 0,
+          puntosCriticos: data.puntosCriticos || 0,
+
+          // Oscar - Contactos y Emergencia
+          contactosEmergencia: data.contactosEmergencia || 0,
+
+          // Oscar - Navegación y Geolocalización
+          rutasPorDia: data.rutas?.hoy || 0,
+          rutasTotales: data.rutas?.total || 0,
+          rutasCompletadas: data.rutas?.rutasCompletadas || 0,
+
+          // David - Incidencias
+          incidenciasReportadas: data.incidencias?.total || 0,
+          incidenciasResueltas: data.incidencias?.resueltas || 0,
+          incidenciasPendientes: data.incidencias?.pendientes || 0,
+
+          // David - Soporte
+          ticketsPendientes: data.soporte?.pendientes || 0,
+          ticketsEnProceso: data.soporte?.enProceso || 0,
+          ticketsResueltos: data.soporte?.resueltos || 0,
+
+          // Josselyn - Configuración Global
+          configuracionesActivas: data.configuracion?.activas || 0,
+          usuariosConConfigPersonalizada: data.configuracion?.personalizadas || 0,
+
+          // Ronny - Tarjeta ID y Notificaciones
+          tarjetasIDGeneradas: data.tarjetas?.generadas || 0,
+          notificacionesEnviadas: data.notificaciones?.enviadas || 0,
+          plantillasNotificaciones: data.notificaciones?.plantillas || 0,
+
+          // Uso de módulos (todos)
+          usoModulos: data.usoModulos || {}
+        });
+      } else {
+        console.error('Error en respuesta del servidor:', response.message);
+        alert('Error al cargar las métricas. Por favor, intenta de nuevo.');
       }
     } catch (error) {
       console.error('Error cargando métricas:', error);
-      // Mock data para desarrollo - Dashboard completo de todo el admin
-      setMetrics({
-        // Angelo - Gestión de Usuarios
-        totalUsuarios: 1247,
-        usuariosActivos: 1089,
-        usuariosNuevosHoy: 23,
-        usuariosBloqueados: 12,
-
-        // Angelo - Gestión de Lugares y Zonas
-        lugaresFavoritos: 3421,
-        zonasSeguras: 156,
-        puntosCriticos: 89,
-
-        // Oscar - Contactos y Emergencia
-        contactosEmergencia: 2847,
-
-        // Oscar - Navegación y Geolocalización
-        rutasPorDia: 342,
-        rutasTotales: 15678,
-        rutasCompletadas: 14892,
-
-        // David - Incidencias
-        incidenciasReportadas: 45,
-        incidenciasResueltas: 38,
-        incidenciasPendientes: 7,
-
-        // David - Soporte
-        ticketsPendientes: 12,
-        ticketsEnProceso: 8,
-        ticketsResueltos: 234,
-
-        // Josselyn - Configuración Global
-        configuracionesActivas: 3,
-        usuariosConConfigPersonalizada: 456,
-
-        // Ronny - Tarjeta ID y Notificaciones
-        tarjetasIDGeneradas: 1089,
-        notificacionesEnviadas: 5432,
-        plantillasNotificaciones: 12,
-
-        // Uso de módulos (todos)
-        usoModulos: {
-          'Navegación': 856,
-          'Lugares Favoritos': 623,
-          'Contactos': 445,
-          'Tarjeta ID': 378,
-          'Configuración': 312,
-          'Soporte': 189,
-        }
-      });
+      alert('No se pudo conectar con el servidor. Verifica que esté corriendo en http://localhost:8888');
     } finally {
       setLoading(false);
     }

@@ -31,14 +31,13 @@ export default function IncidenciasScreen() {
       const response = await getIncidencias();
       if (response.success) {
         setIncidencias(response.data || []);
+      } else {
+        console.error('Error al cargar incidencias:', response.message);
+        alert('Error al cargar las incidencias del servidor');
       }
     } catch (error) {
-      console.error('Error:', error);
-      // Mock data para demo
-      setIncidencias([
-        { id: 1, titulo: 'Rampa inaccesible', zona: 'Centro', tipo: 'accesibilidad', estado: 'pendiente', fecha: '2025-12-25' },
-        { id: 2, titulo: 'Semáforo sin audio', zona: 'Norte', tipo: 'señalización', estado: 'en_revision', fecha: '2025-12-24' },
-      ]);
+      console.error('Error de conexión al cargar incidencias:', error);
+      alert('No se pudo conectar con el servidor. Verifica que esté corriendo en http://localhost:8888');
     } finally {
       setLoading(false);
     }
@@ -47,25 +46,39 @@ export default function IncidenciasScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let response;
       if (editingId) {
-        await updateIncidencia(editingId, formData);
+        response = await updateIncidencia(editingId, formData);
       } else {
-        await createIncidencia(formData);
+        response = await createIncidencia(formData);
       }
-      loadIncidencias();
-      closeModal();
+
+      if (response.success) {
+        alert(`✅ Incidencia ${editingId ? 'actualizada' : 'creada'} correctamente en la base de datos`);
+        await loadIncidencias();
+        closeModal();
+      } else {
+        alert('❌ Error: ' + (response.message || 'No se pudo guardar la incidencia'));
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al guardar incidencia:', error);
+      alert('❌ Error de conexión con el servidor');
     }
   };
 
   const handleDelete = async (id) => {
     if (confirm('¿Eliminar esta incidencia?')) {
       try {
-        await deleteIncidencia(id);
-        loadIncidencias();
+        const response = await deleteIncidencia(id);
+        if (response.success) {
+          alert('✅ Incidencia eliminada correctamente de la base de datos');
+          await loadIncidencias();
+        } else {
+          alert('❌ Error: ' + (response.message || 'No se pudo eliminar la incidencia'));
+        }
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error al eliminar incidencia:', error);
+        alert('❌ Error de conexión con el servidor');
       }
     }
   };

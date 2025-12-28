@@ -22,32 +22,44 @@ export default function SoporteScreen() {
       const response = await getTickets();
       if (response.success) {
         setTickets(response.data || []);
+      } else {
+        console.error('Error al cargar tickets:', response.message);
+        alert('Error al cargar los tickets de soporte del servidor');
       }
     } catch (error) {
-      // Mock data
-      setTickets([
-        { id: 1, asunto: 'No funciona navegación', usuario: 'Juan Pérez', estado: 'pendiente', prioridad: 'alta', fecha: '2025-12-25' },
-        { id: 2, asunto: 'Error al registrar ruta', usuario: 'María García', estado: 'en_proceso', prioridad: 'media', fecha: '2025-12-24' },
-      ]);
+      console.error('Error de conexión al cargar tickets:', error);
+      alert('No se pudo conectar con el servidor. Verifica que esté corriendo en http://localhost:8888');
     }
   };
 
   const handleUpdateEstado = async (id, nuevoEstado) => {
     try {
-      await updateTicket(id, { estado: nuevoEstado });
-      loadTickets();
+      const response = await updateTicket(id, { estado: nuevoEstado });
+      if (response.success) {
+        alert('✅ Estado del ticket actualizado correctamente en la base de datos');
+        await loadTickets();
+      } else {
+        alert('❌ Error: ' + (response.message || 'No se pudo actualizar el estado'));
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al actualizar estado:', error);
+      alert('❌ Error de conexión con el servidor');
     }
   };
 
   const handleDelete = async (id) => {
     if (confirm('¿Archivar este ticket?')) {
       try {
-        await deleteTicket(id);
-        loadTickets();
+        const response = await deleteTicket(id);
+        if (response.success) {
+          alert('✅ Ticket archivado correctamente en la base de datos');
+          await loadTickets();
+        } else {
+          alert('❌ Error: ' + (response.message || 'No se pudo archivar el ticket'));
+        }
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error al archivar ticket:', error);
+        alert('❌ Error de conexión con el servidor');
       }
     }
   };

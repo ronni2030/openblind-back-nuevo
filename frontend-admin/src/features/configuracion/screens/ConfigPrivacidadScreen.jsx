@@ -35,10 +35,17 @@ export default function ConfigPrivacidadScreen() {
 
   const handleSave = async () => {
     try {
-      await updateConfiguracionGlobal(config);
-      alert('Configuración guardada');
+      const response = await updateConfiguracionGlobal(config);
+      if (response.success) {
+        alert('✅ Configuración guardada correctamente en la base de datos');
+        // Recargar config para obtener datos actualizados del servidor
+        await loadConfig();
+      } else {
+        alert('❌ Error: ' + (response.message || 'No se pudo guardar la configuración'));
+      }
     } catch (error) {
-      alert('Error al guardar');
+      console.error('Error al guardar configuración:', error);
+      alert('❌ Error de conexión: No se pudo conectar con el servidor en http://localhost:8888');
     }
   };
 
