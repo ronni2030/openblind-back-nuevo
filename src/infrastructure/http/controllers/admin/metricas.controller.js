@@ -48,26 +48,12 @@ metricasController.getResumen = async (req, res) => {
                 resolvidasHoy: 15
             },
             usoModulos: {
-                navegacion: {
-                    sesiones: 6234,
-                    usuariosActivos: 678,
-                    porcentajeUso: 76.2
-                },
-                tarjeta: {
-                    sesiones: 892,
-                    usuariosActivos: 445,
-                    porcentajeUso: 50.1
-                },
-                contactos: {
-                    sesiones: 1567,
-                    usuariosActivos: 523,
-                    porcentajeUso: 58.7
-                },
-                configuracion: {
-                    sesiones: 2341,
-                    usuariosActivos: 789,
-                    porcentajeUso: 88.5
-                }
+                'Navegación': 856,
+                'Lugares Favoritos': 623,
+                'Contactos': 445,
+                'Tarjeta ID': 378,
+                'Configuración': 312,
+                'Soporte': 189
             }
         };
 
