@@ -14,6 +14,7 @@ export default function IncidenciasScreen() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedIncidencia, setSelectedIncidencia] = useState(null);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
@@ -145,8 +146,9 @@ export default function IncidenciasScreen() {
                   <td><Badge variant={getEstadoBadge(inc.estado)} size="sm">{inc.estado.replace('_', ' ')}</Badge></td>
                   <td>{inc.fecha}</td>
                   <td className="actions">
-                    <button className="btn-icon" onClick={() => openModal(inc)}>✏️</button>
-                    <button className="btn-icon" onClick={() => handleDelete(inc.id)}>🗑️</button>
+                    <button className="btn-icon" onClick={() => setSelectedIncidencia(inc)} title="Ver detalles">👁️</button>
+                    <button className="btn-icon" onClick={() => openModal(inc)} title="Editar">✏️</button>
+                    <button className="btn-icon" onClick={() => handleDelete(inc.id)} title="Eliminar">🗑️</button>
                   </td>
                 </tr>
               ))}
@@ -230,6 +232,52 @@ export default function IncidenciasScreen() {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Detalles de Incidencia */}
+      {selectedIncidencia && (
+        <div className="modal-overlay" onClick={() => setSelectedIncidencia(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalles de Incidencia #{selectedIncidencia.id}</h2>
+              <button className="modal-close" onClick={() => setSelectedIncidencia(null)}>×</button>
+            </div>
+            <div className="incidencia-details">
+              <div className="detail-row">
+                <strong>Título:</strong>
+                <p>{selectedIncidencia.titulo}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Descripción:</strong>
+                <p>{selectedIncidencia.descripcion || 'Sin descripción'}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Zona:</strong>
+                <p>{selectedIncidencia.zona}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Tipo:</strong>
+                <Badge variant="primary">{selectedIncidencia.tipo}</Badge>
+              </div>
+              <div className="detail-row">
+                <strong>Estado:</strong>
+                <Badge variant={getEstadoBadge(selectedIncidencia.estado)}>
+                  {selectedIncidencia.estado.replace('_', ' ')}
+                </Badge>
+              </div>
+              <div className="detail-row">
+                <strong>Fecha:</strong>
+                <p>{selectedIncidencia.fecha}</p>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <Button variant="ghost" onClick={() => setSelectedIncidencia(null)}>Cerrar</Button>
+              <Button variant="primary" onClick={() => { setSelectedIncidencia(null); openModal(selectedIncidencia); }}>
+                Editar Incidencia
+              </Button>
+            </div>
           </div>
         </div>
       )}

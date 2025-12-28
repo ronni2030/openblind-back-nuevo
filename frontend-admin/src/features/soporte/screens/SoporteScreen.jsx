@@ -116,6 +116,7 @@ export default function SoporteScreen() {
                   <td><Badge variant={getEstadoBadge(ticket.estado)} size="sm">{ticket.estado.replace('_', ' ')}</Badge></td>
                   <td>{ticket.fecha}</td>
                   <td className="actions">
+                    <button className="btn-icon" onClick={() => setSelectedTicket(ticket)} title="Ver detalles">👁️</button>
                     <select
                       className="select-estado"
                       value={ticket.estado}
@@ -126,7 +127,7 @@ export default function SoporteScreen() {
                       <option value="resuelto">Resuelto</option>
                       <option value="cerrado">Cerrado</option>
                     </select>
-                    <button className="btn-icon" onClick={() => handleDelete(ticket.id)}>🗑️</button>
+                    <button className="btn-icon" onClick={() => handleDelete(ticket.id)} title="Archivar">🗑️</button>
                   </td>
                 </tr>
               ))}
@@ -134,6 +135,47 @@ export default function SoporteScreen() {
           </table>
         </div>
       </Card>
+
+      {/* Modal de Detalles del Ticket */}
+      {selectedTicket && (
+        <div className="modal-overlay" onClick={() => setSelectedTicket(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalles del Ticket #{selectedTicket.id}</h2>
+              <button className="modal-close" onClick={() => setSelectedTicket(null)}>×</button>
+            </div>
+            <div className="ticket-details">
+              <div className="detail-row">
+                <strong>Asunto:</strong>
+                <p>{selectedTicket.asunto}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Usuario:</strong>
+                <p>{selectedTicket.usuario}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Descripción:</strong>
+                <p>{selectedTicket.descripcion || 'Sin descripción'}</p>
+              </div>
+              <div className="detail-row">
+                <strong>Prioridad:</strong>
+                <Badge variant={getPrioridadBadge(selectedTicket.prioridad)}>{selectedTicket.prioridad}</Badge>
+              </div>
+              <div className="detail-row">
+                <strong>Estado:</strong>
+                <Badge variant={getEstadoBadge(selectedTicket.estado)}>{selectedTicket.estado.replace('_', ' ')}</Badge>
+              </div>
+              <div className="detail-row">
+                <strong>Fecha:</strong>
+                <p>{selectedTicket.fecha}</p>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <Button variant="ghost" onClick={() => setSelectedTicket(null)}>Cerrar</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
