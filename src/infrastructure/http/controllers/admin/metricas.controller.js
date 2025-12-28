@@ -8,9 +8,9 @@
  * - Usuarios, Rutas, Lugares: Datos ejemplo (pendiente Angelo, Oscar, Ronny)
  */
 
-const Incidencia = require('../../../domain/models/sql/admin/incidencia');
-const TicketSoporte = require('../../../domain/models/sql/admin/ticketSoporte');
-const ConfiguracionGlobal = require('../../../domain/models/sql/configuracionGlobal');
+const Incidencia = require('../../../../domain/models/sql/admin/incidencia');
+const TicketSoporte = require('../../../../domain/models/sql/admin/ticketSoporte');
+const ConfiguracionGlobal = require('../../../../domain/models/sql/configuracionGlobal');
 const { Op } = require('sequelize');
 
 const metricasController = {};
