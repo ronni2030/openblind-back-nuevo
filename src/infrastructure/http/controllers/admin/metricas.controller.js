@@ -62,17 +62,8 @@ metricasController.getResumen = async (req, res) => {
 
         // Usuarios REALES de BD
         const totalUsuarios = await Usuario.count();
-        const usuariosActivos = await Usuario.count({ where: { estado: 'activo' } });
-
-        // Calcular usuarios nuevos hoy
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-        const usuariosNuevosHoy = await Usuario.count({
-            where: {
-                createdAt: { [Op.gte]: hoy }
-            }
-        });
-
+        const usuariosActivos = await Usuario.count({ where: { stateUser: 'activo' } });
+        const usuariosNuevosHoy = 0; // NO disponible: tabla users no tiene timestamps
         // Lugares REALES de BD
         const lugaresFavoritos = await LugarFavorito.count();
         const lugaresTotales = await LugarTuristico.count();
@@ -83,13 +74,7 @@ metricasController.getResumen = async (req, res) => {
 
         // Rutas REALES de BD
         const totalRutas = await Ruta.count();
-
-        // Rutas generadas hoy
-        const rutasHoy = await Ruta.count({
-            where: {
-                createdAt: { [Op.gte]: hoy }
-            }
-        });
+        const rutasHoy = 0; // NO disponible: tabla rutas no tiene timestamps
 
         // Contactos de Emergencia REALES
         const contactosEmergencia = await ContactoEmergencia.count();
