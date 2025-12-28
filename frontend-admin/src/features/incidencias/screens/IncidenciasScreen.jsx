@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Card, Button, Badge } from '@shared/components';
+import { Card, Button, Badge, Toast } from '@shared/components';
 import { getIncidencias, createIncidencia, updateIncidencia, deleteIncidencia } from '@services/api';
 import './IncidenciasScreen.css';
 
@@ -15,6 +15,7 @@ export default function IncidenciasScreen() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [selectedIncidencia, setSelectedIncidencia] = useState(null);
+  const [toast, setToast] = useState(null);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
@@ -34,11 +35,11 @@ export default function IncidenciasScreen() {
         setIncidencias(response.data || []);
       } else {
         console.error('Error al cargar incidencias:', response.message);
-        alert('Error al cargar las incidencias del servidor');
+        setToast({ message: 'Error al cargar incidencias del servidor', type: 'error' });
       }
     } catch (error) {
       console.error('Error de conexión al cargar incidencias:', error);
-      alert('No se pudo conectar con el servidor. Verifica que esté corriendo en http://localhost:8888');
+      setToast({ message: 'Error de conexión con el servidor (puerto 8888)', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -55,31 +56,31 @@ export default function IncidenciasScreen() {
       }
 
       if (response.success) {
-        alert(`✅ Incidencia ${editingId ? 'actualizada' : 'creada'} correctamente en la base de datos`);
+        setToast({ message: `Incidencia ${editingId ? 'actualizada' : 'creada'} correctamente en MySQL`, type: 'success' });
         await loadIncidencias();
         closeModal();
       } else {
-        alert('❌ Error: ' + (response.message || 'No se pudo guardar la incidencia'));
+        setToast({ message: 'Error: ' + (response.message || 'No se pudo guardar'), type: 'error' });
       }
     } catch (error) {
       console.error('Error al guardar incidencia:', error);
-      alert('❌ Error de conexión con el servidor');
+      setToast({ message: 'Error de conexión con el servidor', type: 'error' });
     }
   };
 
   const handleDelete = async (id) => {
-    if (confirm('¿Eliminar esta incidencia?')) {
+    if (window.confirm('¿Eliminar esta incidencia?')) {
       try {
         const response = await deleteIncidencia(id);
         if (response.success) {
-          alert('✅ Incidencia eliminada correctamente de la base de datos');
+          setToast({ message: 'Incidencia eliminada correctamente de MySQL', type: 'success' });
           await loadIncidencias();
         } else {
-          alert('❌ Error: ' + (response.message || 'No se pudo eliminar la incidencia'));
+          setToast({ message: 'Error: ' + (response.message || 'No se pudo eliminar'), type: 'error' });
         }
       } catch (error) {
         console.error('Error al eliminar incidencia:', error);
-        alert('❌ Error de conexión con el servidor');
+        setToast({ message: 'Error de conexión con el servidor', type: 'error' });
       }
     }
   };
@@ -112,6 +113,7 @@ export default function IncidenciasScreen() {
 
   return (
     <div className="incidencias">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="page-header">
         <div>
           <h1>Gestión de Incidencias</h1>

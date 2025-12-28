@@ -5,13 +5,14 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Card, Button, Badge } from '@shared/components';
+import { Card, Button, Badge, Toast } from '@shared/components';
 import { getTickets, updateTicket, deleteTicket } from '@services/api';
 import './SoporteScreen.css';
 
 export default function SoporteScreen() {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     loadTickets();
@@ -24,11 +25,11 @@ export default function SoporteScreen() {
         setTickets(response.data || []);
       } else {
         console.error('Error al cargar tickets:', response.message);
-        alert('Error al cargar los tickets de soporte del servidor');
+        setToast({ message: 'Error al cargar tickets de soporte del servidor', type: 'error' });
       }
     } catch (error) {
       console.error('Error de conexión al cargar tickets:', error);
-      alert('No se pudo conectar con el servidor. Verifica que esté corriendo en http://localhost:8888');
+      setToast({ message: 'Error de conexión con el servidor (puerto 8888)', type: 'error' });
     }
   };
 
@@ -36,30 +37,30 @@ export default function SoporteScreen() {
     try {
       const response = await updateTicket(id, { estado: nuevoEstado });
       if (response.success) {
-        alert('✅ Estado del ticket actualizado correctamente en la base de datos');
+        setToast({ message: 'Estado del ticket actualizado correctamente en MySQL', type: 'success' });
         await loadTickets();
       } else {
-        alert('❌ Error: ' + (response.message || 'No se pudo actualizar el estado'));
+        setToast({ message: 'Error: ' + (response.message || 'No se pudo actualizar'), type: 'error' });
       }
     } catch (error) {
       console.error('Error al actualizar estado:', error);
-      alert('❌ Error de conexión con el servidor');
+      setToast({ message: 'Error de conexión con el servidor', type: 'error' });
     }
   };
 
   const handleDelete = async (id) => {
-    if (confirm('¿Archivar este ticket?')) {
+    if (window.confirm('¿Archivar este ticket?')) {
       try {
         const response = await deleteTicket(id);
         if (response.success) {
-          alert('✅ Ticket archivado correctamente en la base de datos');
+          setToast({ message: 'Ticket archivado correctamente en MySQL', type: 'success' });
           await loadTickets();
         } else {
-          alert('❌ Error: ' + (response.message || 'No se pudo archivar el ticket'));
+          setToast({ message: 'Error: ' + (response.message || 'No se pudo archivar'), type: 'error' });
         }
       } catch (error) {
         console.error('Error al archivar ticket:', error);
-        alert('❌ Error de conexión con el servidor');
+        setToast({ message: 'Error de conexión con el servidor', type: 'error' });
       }
     }
   };
@@ -85,6 +86,7 @@ export default function SoporteScreen() {
 
   return (
     <div className="soporte">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="page-header">
         <div>
           <h1>Gestión de Soporte</h1>
