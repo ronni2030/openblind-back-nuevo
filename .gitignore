@@ -9,3 +9,4 @@ error.log
 # Logs directory
 logs/
 src/infrastructure/config/logs/
+src/infrastructure/logs/
