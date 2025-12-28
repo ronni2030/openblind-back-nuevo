@@ -26,18 +26,45 @@ export default function DashboardScreen() {
       }
     } catch (error) {
       console.error('Error cargando métricas:', error);
-      // Mock data para desarrollo
+      // Mock data para desarrollo - Dashboard completo de todo el admin
       setMetrics({
-        usuariosActivos: 1247,
+        // Angelo - Gestión de Usuarios
+        totalUsuarios: 1247,
+        usuariosActivos: 1089,
+        usuariosNuevosHoy: 23,
+        usuariosBloqueados: 12,
+
+        // Angelo - Gestión de Lugares y Zonas
+        lugaresFavoritos: 3421,
+        zonasSeguras: 156,
+        puntosCriticos: 89,
+
+        // Oscar - Contactos y Emergencia
+        contactosEmergencia: 2847,
+
+        // Oscar - Navegación y Geolocalización
         rutasPorDia: 342,
+        rutasTotales: 15678,
+        rutasCompletadas: 14892,
+
+        // David - Incidencias
         incidenciasReportadas: 45,
         incidenciasResueltas: 38,
+        incidenciasPendientes: 7,
+
+        // David - Soporte
         ticketsPendientes: 12,
+        ticketsEnProceso: 8,
+        ticketsResueltos: 234,
+
+        // Uso de módulos (todos)
         usoModulos: {
           'Navegación': 856,
           'Lugares Favoritos': 623,
           'Contactos': 445,
+          'Tarjeta ID': 378,
           'Configuración': 312,
+          'Soporte': 189,
         }
       });
     } finally {
@@ -71,36 +98,107 @@ export default function DashboardScreen() {
         </button>
       </div>
 
-      {/* Métricas Principales */}
+      {/* Métricas Principales - Resumen General */}
       <div className="metrics-grid">
         <MetricCard
           title="Usuarios Activos"
           value={metrics?.usuariosActivos || 0}
           icon="👥"
           color="primary"
-          trend="+12%"
+          subtitle={`Total: ${metrics?.totalUsuarios || 0}`}
         />
         <MetricCard
           title="Rutas/Día"
           value={metrics?.rutasPorDia || 0}
           icon="🗺️"
           color="success"
-          trend="+8%"
+          subtitle={`${metrics?.rutasCompletadas || 0} completadas`}
         />
         <MetricCard
           title="Incidencias"
-          value={`${metrics?.incidenciasResueltas || 0}/${metrics?.incidenciasReportadas || 0}`}
+          value={metrics?.incidenciasPendientes || 0}
           icon="⚠️"
           color="warning"
-          subtitle="Resueltas / Reportadas"
+          subtitle={`${metrics?.incidenciasResueltas || 0} resueltas`}
         />
         <MetricCard
           title="Tickets Soporte"
           value={metrics?.ticketsPendientes || 0}
           icon="🎫"
           color="info"
-          subtitle="Pendientes"
+          subtitle={`${metrics?.ticketsEnProceso || 0} en proceso`}
         />
+      </div>
+
+      {/* Sección Angelo - Gestión de Usuarios y Lugares */}
+      <div className="dashboard-section">
+        <h2 className="section-title">👤 Gestión de Usuarios y Lugares (Angelo Vera)</h2>
+        <div className="metrics-grid-small">
+          <MetricCardSmall
+            title="Total Usuarios"
+            value={metrics?.totalUsuarios || 0}
+            subtitle={`${metrics?.usuariosNuevosHoy || 0} nuevos hoy`}
+          />
+          <MetricCardSmall
+            title="Lugares Favoritos"
+            value={metrics?.lugaresFavoritos || 0}
+            subtitle="Guardados por usuarios"
+          />
+          <MetricCardSmall
+            title="Zonas Seguras"
+            value={metrics?.zonasSeguras || 0}
+            subtitle="Configuradas"
+          />
+          <MetricCardSmall
+            title="Puntos Críticos"
+            value={metrics?.puntosCriticos || 0}
+            subtitle="Marcados"
+          />
+        </div>
+      </div>
+
+      {/* Sección Oscar - Contactos y Navegación */}
+      <div className="dashboard-section">
+        <h2 className="section-title">📍 Contactos y Navegación (Oscar Soria)</h2>
+        <div className="metrics-grid-small">
+          <MetricCardSmall
+            title="Contactos Emergencia"
+            value={metrics?.contactosEmergencia || 0}
+            subtitle="Registrados"
+          />
+          <MetricCardSmall
+            title="Rutas Totales"
+            value={metrics?.rutasTotales || 0}
+            subtitle={`${metrics?.rutasCompletadas || 0} completadas`}
+          />
+          <MetricCardSmall
+            title="Rutas por Día"
+            value={metrics?.rutasPorDia || 0}
+            subtitle="Promedio"
+          />
+        </div>
+      </div>
+
+      {/* Sección David - Incidencias y Soporte */}
+      <div className="dashboard-section">
+        <h2 className="section-title">🛠️ Incidencias y Soporte (David Maldonado)</h2>
+        <div className="metrics-grid-small">
+          <MetricCardSmall
+            title="Incidencias Pendientes"
+            value={metrics?.incidenciasPendientes || 0}
+            subtitle={`${metrics?.incidenciasResueltas || 0} resueltas`}
+          />
+          <MetricCardSmall
+            title="Tickets Pendientes"
+            value={metrics?.ticketsPendientes || 0}
+            subtitle={`${metrics?.ticketsResueltos || 0} resueltos`}
+          />
+          <MetricCardSmall
+            title="En Proceso"
+            value={metrics?.ticketsEnProceso || 0}
+            subtitle="Tickets activos"
+          />
+        </div>
       </div>
 
       {/* Uso de Módulos */}
@@ -134,6 +232,16 @@ function MetricCard({ title, value, icon, color, trend, subtitle }) {
         {subtitle && <p className="metric-subtitle">{subtitle}</p>}
         {trend && <span className="metric-trend">{trend}</span>}
       </div>
+    </div>
+  );
+}
+
+function MetricCardSmall({ title, value, subtitle }) {
+  return (
+    <div className="metric-card-small">
+      <h3 className="metric-small-title">{title}</h3>
+      <p className="metric-small-value">{value}</p>
+      {subtitle && <p className="metric-small-subtitle">{subtitle}</p>}
     </div>
   );
 }
