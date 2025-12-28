@@ -36,7 +36,8 @@ configuracionGlobalController.get = async (req, res) => {
 /**
  * PUT /api/admin/configuracion
  * Actualiza toda la configuración global
- * Body: { accesibilidad: {...}, navegacion: {...}, privacidad: {...} }
+ * Body (formato 1 - plano): { tamanoFuente: 'large', idioma: 'es', ... }
+ * Body (formato 2 - anidado): { accesibilidad: {...}, navegacion: {...}, privacidad: {...} }
  */
 configuracionGlobalController.update = async (req, res) => {
     try {
@@ -46,43 +47,67 @@ configuracionGlobalController.update = async (req, res) => {
         // Obtener configuración global
         const config = await ConfiguracionGlobal.getOrCreate();
 
-        // Mapear las secciones a campos del modelo
-        const updateData = {
-            // Accesibilidad
-            ...(updates.accesibilidad && {
-                tamanoFuente: updates.accesibilidad.tamanoFuente,
-                temaContraste: updates.accesibilidad.temaContraste,
-                idioma: updates.accesibilidad.idioma,
-                velocidadVoz: updates.accesibilidad.velocidadVoz,
-                volumenVoz: updates.accesibilidad.volumenVoz,
-                feedbackHaptico: updates.accesibilidad.feedbackHaptico,
-                nivelDetalle: updates.accesibilidad.nivelDetalle
-            }),
-            // Navegación
-            ...(updates.navegacion && {
-                longitudMaxima: updates.navegacion.longitudMaxima,
-                paradaSegura: updates.navegacion.paradaSegura,
-                frecuenciaInstrucciones: updates.navegacion.frecuenciaInstrucciones,
-                tipoInstruccion: updates.navegacion.tipoInstruccion,
-                alertaDesvio: updates.navegacion.alertaDesvio,
-                alertaObstaculo: updates.navegacion.alertaObstaculo
-            }),
-            // Privacidad
-            ...(updates.privacidad && {
-                retencionUbicacion: updates.privacidad.retencionUbicacion,
-                trackingBackground: updates.privacidad.trackingBackground,
-                compartirUbicacion: updates.privacidad.compartirUbicacion,
-                guardarHistorial: updates.privacidad.guardarHistorial,
-                permitirAnonimo: updates.privacidad.permitirAnonimo
-            }),
-            // Opciones modificables
-            ...(updates.opcionesModificables && {
-                opcionesModificables: updates.opcionesModificables
-            }),
-            // Metadata
+        // Determinar formato de los datos
+        const isNestedFormat = updates.accesibilidad || updates.navegacion || updates.privacidad;
+
+        let updateData = {
             ultimaActualizacion: new Date(),
             modificadoPor
         };
+
+        if (isNestedFormat) {
+            // Formato anidado (por secciones)
+            updateData = {
+                ...updateData,
+                // Accesibilidad
+                ...(updates.accesibilidad && {
+                    tamanoFuente: updates.accesibilidad.tamanoFuente,
+                    temaContraste: updates.accesibilidad.temaContraste,
+                    idioma: updates.accesibilidad.idioma,
+                    velocidadVoz: updates.accesibilidad.velocidadVoz,
+                    volumenVoz: updates.accesibilidad.volumenVoz,
+                    feedbackHaptico: updates.accesibilidad.feedbackHaptico,
+                    nivelDetalle: updates.accesibilidad.nivelDetalle
+                }),
+                // Navegación
+                ...(updates.navegacion && {
+                    longitudMaxima: updates.navegacion.longitudMaxima,
+                    paradaSegura: updates.navegacion.paradaSegura,
+                    frecuenciaInstrucciones: updates.navegacion.frecuenciaInstrucciones,
+                    tipoInstruccion: updates.navegacion.tipoInstruccion,
+                    alertaDesvio: updates.navegacion.alertaDesvio,
+                    alertaObstaculo: updates.navegacion.alertaObstaculo
+                }),
+                // Privacidad
+                ...(updates.privacidad && {
+                    retencionUbicacion: updates.privacidad.retencionUbicacion,
+                    trackingBackground: updates.privacidad.trackingBackground,
+                    compartirUbicacion: updates.privacidad.compartirUbicacion,
+                    guardarHistorial: updates.privacidad.guardarHistorial,
+                    permitirAnonimo: updates.privacidad.permitirAnonimo
+                }),
+                // Opciones modificables
+                ...(updates.opcionesModificables && {
+                    opcionesModificables: updates.opcionesModificables
+                })
+            };
+        } else {
+            // Formato plano (envío directo de campos)
+            // Filtrar solo campos permitidos
+            const allowedFields = [
+                'tamanoFuente', 'temaContraste', 'idioma', 'velocidadVoz', 'volumenVoz',
+                'feedbackHaptico', 'nivelDetalle', 'longitudMaxima', 'paradaSegura',
+                'frecuenciaInstrucciones', 'tipoInstruccion', 'alertaDesvio', 'alertaObstaculo',
+                'retencionUbicacion', 'trackingBackground', 'compartirUbicacion',
+                'guardarHistorial', 'permitirAnonimo', 'opcionesModificables'
+            ];
+
+            for (const field of allowedFields) {
+                if (updates[field] !== undefined) {
+                    updateData[field] = updates[field];
+                }
+            }
+        }
 
         // Actualizar configuración
         await config.update(updateData);
