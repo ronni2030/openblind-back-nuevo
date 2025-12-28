@@ -2,15 +2,16 @@
  * Controlador de Métricas para Dashboard Admin
  *
  * Proporciona estadísticas y métricas del sistema:
- * - Usuarios activos
- * - Rutas generadas
- * - Incidencias reportadas/resueltas
- * - Uso de módulos
- *
- * NOTA: Actualmente usa datos de ejemplo (mock).
- * Cuando existan los modelos de Usuario, Ruta, Incidencia, etc.,
- * se debe reemplazar con queries reales a la base de datos.
+ * - Incidencias: DATOS REALES de BD (David Maldonado)
+ * - Soporte: DATOS REALES de BD (David Maldonado)
+ * - Configuración: DATOS REALES de BD (Josselyn Moposita)
+ * - Usuarios, Rutas, Lugares: Datos ejemplo (pendiente Angelo, Oscar, Ronny)
  */
+
+const Incidencia = require('../../../domain/models/sql/admin/incidencia');
+const TicketSoporte = require('../../../domain/models/sql/admin/ticketSoporte');
+const ConfiguracionGlobal = require('../../../domain/models/sql/configuracionGlobal');
+const { Op } = require('sequelize');
 
 const metricasController = {};
 
@@ -20,33 +21,99 @@ const metricasController = {};
  */
 metricasController.getResumen = async (req, res) => {
     try {
-        // TODO: Reemplazar con queries reales cuando existan los modelos
+        // ==========================================
+        // DATOS REALES DE BD - David Maldonado
+        // ==========================================
+
+        // Incidencias (CRUD completo - David)
+        const totalIncidencias = await Incidencia.count({ where: { activo: true } });
+        const incidenciasPendientes = await Incidencia.count({ where: { estado: 'pendiente', activo: true } });
+        const incidenciasEnRevision = await Incidencia.count({ where: { estado: 'en_revision', activo: true } });
+        const incidenciasResueltas = await Incidencia.count({ where: { estado: 'resuelta', activo: true } });
+        const incidenciasDescartadas = await Incidencia.count({ where: { estado: 'descartada', activo: true } });
+
+        // Tickets de Soporte (RUD completo - David)
+        const totalTickets = await TicketSoporte.count({ where: { activo: true } });
+        const ticketsPendientes = await TicketSoporte.count({ where: { estado: 'pendiente', activo: true } });
+        const ticketsEnProceso = await TicketSoporte.count({ where: { estado: 'en_proceso', activo: true } });
+        const ticketsResueltos = await TicketSoporte.count({ where: { estado: 'resuelto', activo: true } });
+
+        // ==========================================
+        // DATOS REALES DE BD - Josselyn Moposita
+        // ==========================================
+
+        // Configuración Global (existe y está activa)
+        const configActiva = await ConfiguracionGlobal.count({ where: { activo: true } });
+
+        // ==========================================
+        // DATOS DE EJEMPLO - Pendiente otros estudiantes
+        // ==========================================
+
+        // Angelo Vera - Usuarios y Lugares (pendiente)
+        const datosUsuarios = {
+            total: 1247,
+            activos: 892,
+            nuevosHoy: 23,
+            nuevosEstaSemana: 156,
+            inactivos: 355,
+            bloqueados: 12
+        };
+
+        // Oscar Soria - Rutas y Navegación (pendiente)
+        const datosRutas = {
+            total: 8456,
+            hoy: 342,
+            estaSemana: 2134,
+            promedioDiario: 305,
+            rutasCompletadas: 7892,
+            rutasCanceladas: 564
+        };
+
+        // Ronny Villa - Tarjetas y Notificaciones (pendiente)
+        const datosTarjetas = { generadas: 0 };
+        const datosNotificaciones = { enviadas: 0, plantillas: 0 };
+
+        // ==========================================
+        // RESPUESTA COMPLETA
+        // ==========================================
+
         const resumen = {
-            usuarios: {
-                total: 1247,
-                activos: 892,
-                nuevosHoy: 23,
-                nuevosEstaSemana: 156,
-                inactivos: 355,
-                bloqueados: 12
-            },
-            rutas: {
-                total: 8456,
-                hoy: 342,
-                estaSemana: 2134,
-                promedioDiario: 305,
-                rutasCompletadas: 7892,
-                rutasCanceladas: 564
-            },
+            // Angelo - Datos ejemplo (hasta que implemente sus modelos)
+            usuarios: datosUsuarios,
+            lugaresFavoritos: 0,
+            zonasSeguras: 0,
+            puntosCriticos: 0,
+
+            // Oscar - Datos ejemplo (hasta que implemente sus modelos)
+            rutas: datosRutas,
+            contactosEmergencia: 0,
+
+            // David - DATOS REALES DE LA BD ✅
             incidencias: {
-                total: 234,
-                pendientes: 45,
-                enRevision: 32,
-                resueltas: 145,
-                descartadas: 12,
-                nuevasHoy: 8,
-                resolvidasHoy: 15
+                total: totalIncidencias,
+                pendientes: incidenciasPendientes,
+                enRevision: incidenciasEnRevision,
+                resueltas: incidenciasResueltas,
+                descartadas: incidenciasDescartadas
             },
+            soporte: {
+                total: totalTickets,
+                pendientes: ticketsPendientes,
+                enProceso: ticketsEnProceso,
+                resueltos: ticketsResueltos
+            },
+
+            // Josselyn - DATOS REALES DE LA BD ✅
+            configuracion: {
+                activas: configActiva,
+                personalizadas: 0  // TODO: cuando exista tabla de usuarios con configs personalizadas
+            },
+
+            // Ronny - Datos ejemplo (hasta que implemente sus modelos)
+            tarjetas: datosTarjetas,
+            notificaciones: datosNotificaciones,
+
+            // Uso de módulos (datos ejemplo)
             usoModulos: {
                 'Navegación': 856,
                 'Lugares Favoritos': 623,
@@ -59,7 +126,7 @@ metricasController.getResumen = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: 'Resumen de métricas obtenido exitosamente',
+            message: 'Resumen de métricas obtenido exitosamente (incidencias, soporte y configuración con datos REALES de BD)',
             data: resumen
         });
     } catch (error) {
