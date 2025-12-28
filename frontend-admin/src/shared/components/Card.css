@@ -3,6 +3,18 @@
   border-radius: var(--radius-xl);
   padding: var(--spacing-6);
   transition: all var(--transition-base);
+  animation: cardFadeIn 0.3s ease-out;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ═══════ VARIANTES ═══════ */
@@ -31,6 +43,7 @@
 .card--hoverable:hover {
   border-color: var(--color-border-medium);
   box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
 }
 
 .card--clickable {

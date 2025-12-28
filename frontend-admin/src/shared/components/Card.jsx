@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import './Card.css';
 
 /**
@@ -34,13 +33,9 @@ export default function Card({
   `.trim().replace(/\s+/g, ' ');
 
   return (
-    <motion.div
+    <div
       className={classes}
       onClick={onClick}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={hoverable ? { y: -4, transition: { duration: 0.2 } } : {}}
       {...props}
     >
       {(title || subtitle || icon) && (
@@ -54,6 +49,6 @@ export default function Card({
       )}
 
       <div className="card__body">{children}</div>
-    </motion.div>
+    </div>
   );
 }
