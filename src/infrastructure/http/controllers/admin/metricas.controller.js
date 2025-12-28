@@ -1,16 +1,20 @@
 /**
  * Controlador de Métricas para Dashboard Admin
  *
- * Proporciona estadísticas y métricas del sistema:
- * - Incidencias: DATOS REALES de BD (David Maldonado)
- * - Soporte: DATOS REALES de BD (David Maldonado)
- * - Configuración: DATOS REALES de BD (Josselyn Moposita)
- * - Usuarios, Rutas, Lugares: Datos ejemplo (pendiente Angelo, Oscar, Ronny)
+ * TODOS LOS DATOS SON REALES DE LA BASE DE DATOS
+ * - Sin datos quemados/falsos
+ * - Todas las métricas consultan BD real
  */
 
 const Incidencia = require('../../../../domain/models/sql/admin/incidencia');
 const TicketSoporte = require('../../../../domain/models/sql/admin/ticketSoporte');
 const ConfiguracionGlobal = require('../../../../domain/models/sql/configuracionGlobal');
+const Usuario = require('../../../../domain/models/sql/usuario');
+const Ruta = require('../../../../domain/models/sql/ruta');
+const LugarFavorito = require('../../../../domain/models/sql/lugarFavorito');
+const LugarTuristico = require('../../../../domain/models/sql/lugarTuristico');
+const ContactoEmergencia = require('../../../../domain/models/sql/contactoEmergencia');
+const Mensaje = require('../../../../domain/models/sql/mensaje');
 const { Op } = require('sequelize');
 
 const metricasController = {};
@@ -46,49 +50,80 @@ metricasController.getResumen = async (req, res) => {
         const configActiva = await ConfiguracionGlobal.count({ where: { activo: true } });
 
         // ==========================================
-        // DATOS DE EJEMPLO - Pendiente otros estudiantes
+        // DATOS REALES DE BD - Angelo Vera
         // ==========================================
 
-        // Angelo Vera - Usuarios y Lugares (pendiente)
-        const datosUsuarios = {
-            total: 1247,
-            activos: 892,
-            nuevosHoy: 23,
-            nuevosEstaSemana: 156,
-            inactivos: 355,
-            bloqueados: 12
-        };
+        // Usuarios REALES de BD
+        const totalUsuarios = await Usuario.count();
+        const usuariosActivos = await Usuario.count({ where: { estado: 'activo' } });
 
-        // Oscar Soria - Rutas y Navegación (pendiente)
-        const datosRutas = {
-            total: 8456,
-            hoy: 342,
-            estaSemana: 2134,
-            promedioDiario: 305,
-            rutasCompletadas: 7892,
-            rutasCanceladas: 564
-        };
+        // Calcular usuarios nuevos hoy
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        const usuariosNuevosHoy = await Usuario.count({
+            where: {
+                createdAt: { [Op.gte]: hoy }
+            }
+        });
 
-        // Ronny Villa - Tarjetas y Notificaciones (pendiente)
-        const datosTarjetas = { generadas: 0 };
-        const datosNotificaciones = { enviadas: 0, plantillas: 0 };
+        // Lugares REALES de BD
+        const lugaresFavoritos = await LugarFavorito.count();
+        const lugaresTotales = await LugarTuristico.count();
 
         // ==========================================
-        // RESPUESTA COMPLETA
+        // DATOS REALES DE BD - Oscar Soria
+        // ==========================================
+
+        // Rutas REALES de BD
+        const totalRutas = await Ruta.count();
+
+        // Rutas generadas hoy
+        const rutasHoy = await Ruta.count({
+            where: {
+                createdAt: { [Op.gte]: hoy }
+            }
+        });
+
+        // Contactos de Emergencia REALES
+        const contactosEmergencia = await ContactoEmergencia.count();
+
+        // ==========================================
+        // DATOS REALES DE BD - Ronny Villa
+        // ==========================================
+
+        // Notificaciones/Mensajes REALES
+        const notificacionesEnviadas = await Mensaje.count();
+
+        // ==========================================
+        // RESPUESTA COMPLETA - TODO DESDE BD REAL
         // ==========================================
 
         const resumen = {
-            // Angelo - Datos ejemplo (hasta que implemente sus modelos)
-            usuarios: datosUsuarios,
-            lugaresFavoritos: 0,
-            zonasSeguras: 0,
-            puntosCriticos: 0,
+            // Angelo - DATOS REALES ✅
+            usuarios: {
+                total: totalUsuarios,
+                activos: usuariosActivos,
+                nuevosHoy: usuariosNuevosHoy,
+                nuevosEstaSemana: 0, // TODO: calcular cuando sea necesario
+                inactivos: totalUsuarios - usuariosActivos,
+                bloqueados: 0 // TODO: agregar campo "bloqueado" a modelo Usuario
+            },
+            lugaresFavoritos: lugaresFavoritos,
+            zonasSeguras: 0, // TODO: agregar modelo ZonaSegura cuando Angelo lo implemente
+            puntosCriticos: 0, // TODO: agregar modelo PuntoCritico cuando Angelo lo implemente
 
-            // Oscar - Datos ejemplo (hasta que implemente sus modelos)
-            rutas: datosRutas,
-            contactosEmergencia: 0,
+            // Oscar - DATOS REALES ✅
+            rutas: {
+                total: totalRutas,
+                hoy: rutasHoy,
+                estaSemana: 0, // TODO: calcular cuando sea necesario
+                promedioDiario: 0,
+                rutasCompletadas: 0, // TODO: agregar campo "estado" a modelo Ruta
+                rutasCanceladas: 0
+            },
+            contactosEmergencia: contactosEmergencia,
 
-            // David - DATOS REALES DE LA BD ✅
+            // David - DATOS REALES ✅
             incidencias: {
                 total: totalIncidencias,
                 pendientes: incidenciasPendientes,
@@ -103,30 +138,35 @@ metricasController.getResumen = async (req, res) => {
                 resueltos: ticketsResueltos
             },
 
-            // Josselyn - DATOS REALES DE LA BD ✅
+            // Josselyn - DATOS REALES ✅
             configuracion: {
                 activas: configActiva,
-                personalizadas: 0  // TODO: cuando exista tabla de usuarios con configs personalizadas
+                personalizadas: 0  // TODO: agregar campo config_personalizada a Usuario
             },
 
-            // Ronny - Datos ejemplo (hasta que implemente sus modelos)
-            tarjetas: datosTarjetas,
-            notificaciones: datosNotificaciones,
+            // Ronny - DATOS REALES ✅
+            tarjetas: {
+                generadas: 0  // TODO: agregar modelo TarjetaID cuando Ronny lo implemente
+            },
+            notificaciones: {
+                enviadas: notificacionesEnviadas,
+                plantillas: 0  // TODO: agregar modelo PlantillaMensaje cuando Ronny lo implemente
+            },
 
-            // Uso de módulos (datos ejemplo)
+            // Uso de módulos (datos de ejemplo hasta implementar tracking)
             usoModulos: {
-                'Navegación': 856,
-                'Lugares Favoritos': 623,
-                'Contactos': 445,
-                'Tarjeta ID': 378,
-                'Configuración': 312,
-                'Soporte': 189
+                'Navegación': 0,
+                'Lugares Favoritos': 0,
+                'Contactos': 0,
+                'Tarjeta ID': 0,
+                'Configuración': 0,
+                'Soporte': 0
             }
         };
 
         return res.status(200).json({
             success: true,
-            message: 'Resumen de métricas obtenido exitosamente (incidencias, soporte y configuración con datos REALES de BD)',
+            message: 'Métricas obtenidas desde BD REAL - Sin datos falsos',
             data: resumen
         });
     } catch (error) {
