@@ -6,15 +6,22 @@
  * - Todas las métricas consultan BD real
  */
 
+// Importar modelos de admin (ya instanciados con sequelize)
 const Incidencia = require('../../../../domain/models/sql/admin/incidencia');
 const TicketSoporte = require('../../../../domain/models/sql/admin/ticketSoporte');
 const ConfiguracionGlobal = require('../../../../domain/models/sql/configuracionGlobal');
-const Usuario = require('../../../../domain/models/sql/usuario');
-const Ruta = require('../../../../domain/models/sql/ruta');
-const LugarFavorito = require('../../../../domain/models/sql/lugarFavorito');
-const LugarTuristico = require('../../../../domain/models/sql/lugarTuristico');
-const ContactoEmergencia = require('../../../../domain/models/sql/contactoEmergencia');
-const Mensaje = require('../../../../domain/models/sql/mensaje');
+
+// Importar modelos desde dataBase.orm (ya instanciados)
+const {
+    usuario: Usuario,
+    ruta: Ruta,
+    lugarFavorito: LugarFavorito,
+    lugarTuristico: LugarTuristico,
+    contactoEmergencia: ContactoEmergencia,
+    mensaje: Mensaje,
+    sequelize
+} = require('../../../database/connection/dataBase.orm');
+
 const { Op } = require('sequelize');
 
 const metricasController = {};
