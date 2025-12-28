@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Card, Button } from '@shared/components';
+import { Card, Button, Toast } from '@shared/components';
 import { getConfiguracionGlobal, updateConfiguracionGlobal } from '@services/api';
 import './ConfigScreen.css';
 
@@ -18,6 +18,7 @@ export default function ConfigNavegacionScreen() {
     alertaDesvio: true,
     alertaObstaculo: true,
   });
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     loadConfig();
@@ -38,20 +39,21 @@ export default function ConfigNavegacionScreen() {
     try {
       const response = await updateConfiguracionGlobal(config);
       if (response.success) {
-        alert('✅ Configuración guardada correctamente en la base de datos');
+        setToast({ message: 'Configuración guardada correctamente en MySQL', type: 'success' });
         // Recargar config para obtener datos actualizados del servidor
         await loadConfig();
       } else {
-        alert('❌ Error: ' + (response.message || 'No se pudo guardar la configuración'));
+        setToast({ message: 'Error: ' + (response.message || 'No se pudo guardar'), type: 'error' });
       }
     } catch (error) {
       console.error('Error al guardar configuración:', error);
-      alert('❌ Error de conexión: No se pudo conectar con el servidor en http://localhost:8888');
+      setToast({ message: 'Error de conexión con el servidor (puerto 8888)', type: 'error' });
     }
   };
 
   return (
     <div className="config-screen">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="page-header">
         <div>
           <h1>Configuración de Navegación</h1>

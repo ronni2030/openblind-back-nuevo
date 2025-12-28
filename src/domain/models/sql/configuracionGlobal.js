@@ -266,11 +266,13 @@ ConfiguracionGlobal.beforeCreate(async (configuracion) => {
  * Método estático para obtener o crear la configuración global
  */
 ConfiguracionGlobal.getOrCreate = async () => {
-    let config = await ConfiguracionGlobal.findByPk(1, {
-        where: { activo: true }
+    // Buscar configuración global (id=1)
+    let config = await ConfiguracionGlobal.findOne({
+        where: { id: 1, activo: true }
     });
 
     if (!config) {
+        // Si no existe, crearla con valores por defecto
         config = await ConfiguracionGlobal.create({
             id: 1,
             modificadoPor: 'system'
