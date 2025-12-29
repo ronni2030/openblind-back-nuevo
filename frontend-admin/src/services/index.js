@@ -5,32 +5,25 @@
  * @author OpenBlind Team
  */
 
-// Core
-export { default as http } from '../core/services/httpClient';
+// PASO 1: Importar todos los servicios primero
+import http from '../core/services/httpClient';
+import dashboardService from '../modules/dashboard/services/dashboardService';
+import configuracionService from '../modules/configuracion/services/configuracionService';
+import incidenciasService from '../modules/incidencias/services/incidenciasService';
+import soporteService from '../modules/soporte/services/soporteService';
 
-// Dashboard
-export {
-  dashboardService,
-  default as DashboardService
-} from '../modules/dashboard/services/dashboardService';
+// PASO 2: Exportar servicios completos
+export { http };
+export { dashboardService };
+export { configuracionService };
+export { incidenciasService };
+export { soporteService };
 
-// Configuración (Josselyn)
-export {
-  configuracionService,
-  default as ConfiguracionService
-} from '../modules/configuracion/services/configuracionService';
-
-// Incidencias (David)
-export {
-  incidenciasService,
-  default as IncidenciasService
-} from '../modules/incidencias/services/incidenciasService';
-
-// Soporte (David)
-export {
-  soporteService,
-  default as SoporteService
-} from '../modules/soporte/services/soporteService';
+// Alias para compatibilidad
+export { dashboardService as DashboardService };
+export { configuracionService as ConfiguracionService };
+export { incidenciasService as IncidenciasService };
+export { soporteService as SoporteService };
 
 /**
  * Exportaciones individuales para retrocompatibilidad
@@ -71,6 +64,7 @@ export const {
  * Uso: import services from '@services'; services.dashboardService.getMetricsResumen()
  */
 export default {
+  http,
   dashboard: dashboardService,
   configuracion: configuracionService,
   incidencias: incidenciasService,
