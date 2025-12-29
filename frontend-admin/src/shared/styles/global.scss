@@ -1,0 +1,89 @@
+/**
+ * Estilos Globales
+ * @description Estilos que aplican a toda la aplicación
+ */
+
+@import './variables.scss';
+@import './mixins.scss';
+
+// Reset básico
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// HTML y Body
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $font-primary;
+  font-size: $font-size-md;
+  line-height: 1.5;
+  color: $text-primary;
+  background-color: $bg-primary;
+}
+
+// Enlaces
+a {
+  color: $primary-color;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+
+// Botones
+button {
+  font-family: $font-primary;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+// Inputs
+input,
+textarea,
+select {
+  font-family: $font-primary;
+  font-size: $font-size-md;
+}
+
+// Listas
+ul,
+ol {
+  list-style: none;
+}
+
+// Imágenes
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Scrollbar personalizado
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $gray-light;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-medium;
+  border-radius: $border-radius-sm;
+
+  &:hover {
+    background: $gray-dark;
+  }
+}

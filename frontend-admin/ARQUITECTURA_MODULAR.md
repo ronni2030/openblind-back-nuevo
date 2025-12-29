@@ -1,4 +1,4 @@
-# 🏗️ Arquitectura Modular Funcional - Frontend Admin OpenBlind
+# 🏗️ Arquitectura Modular Funcional Completa - Frontend Admin OpenBlind
 
 ## 📋 Tabla de Contenidos
 1. [Estructura Actual](#estructura-actual)
@@ -14,10 +14,15 @@
 ```
 frontend-admin/src/
 ├── core/                          # ✅ Núcleo del sistema
+│   ├── config/                    # Configuraciones globales
+│   ├── constants/                 # Constantes de la aplicación
+│   ├── hooks/                     # Hooks globales
+│   ├── utils/                     # Utilidades globales
+│   ├── providers/                 # Context providers
 │   └── services/
 │       └── httpClient.js          # Cliente HTTP base reutilizable
 │
-├── features/                      # ✅ Módulos funcionales
+├── modules/                       # ✅ Módulos funcionales
 │   ├── dashboard/
 │   │   ├── screens/               # Pantallas del dashboard
 │   │   └── services/              # ⭐ NUEVO

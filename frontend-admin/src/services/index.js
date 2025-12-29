@@ -12,25 +12,25 @@ export { default as http } from '../core/services/httpClient';
 export {
   dashboardService,
   default as DashboardService
-} from '../features/dashboard/services/dashboardService';
+} from '../modules/dashboard/services/dashboardService';
 
 // Configuración (Josselyn)
 export {
   configuracionService,
   default as ConfiguracionService
-} from '../features/configuracion/services/configuracionService';
+} from '../modules/configuracion/services/configuracionService';
 
 // Incidencias (David)
 export {
   incidenciasService,
   default as IncidenciasService
-} from '../features/incidencias/services/incidenciasService';
+} from '../modules/incidencias/services/incidenciasService';
 
 // Soporte (David)
 export {
   soporteService,
   default as SoporteService
-} from '../features/soporte/services/soporteService';
+} from '../modules/soporte/services/soporteService';
 
 /**
  * Exportaciones individuales para retrocompatibilidad

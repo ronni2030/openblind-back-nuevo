@@ -9,13 +9,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '@shared/components'
 
-// Features - Screens
-import DashboardScreen from '@features/dashboard/screens/DashboardScreen'
-import IncidenciasScreen from '@features/incidencias/screens/IncidenciasScreen'
-import SoporteScreen from '@features/soporte/screens/SoporteScreen'
-import ConfigAccesibilidadScreen from '@features/configuracion/screens/ConfigAccesibilidadScreen'
-import ConfigNavegacionScreen from '@features/configuracion/screens/ConfigNavegacionScreen'
-import ConfigPrivacidadScreen from '@features/configuracion/screens/ConfigPrivacidadScreen'
+// Modules - Screens
+import DashboardScreen from '@modules/dashboard/screens/DashboardScreen'
+import IncidenciasScreen from '@modules/incidencias/screens/IncidenciasScreen'
+import SoporteScreen from '@modules/soporte/screens/SoporteScreen'
+import ConfigAccesibilidadScreen from '@modules/configuracion/screens/ConfigAccesibilidadScreen'
+import ConfigNavegacionScreen from '@modules/configuracion/screens/ConfigNavegacionScreen'
+import ConfigPrivacidadScreen from '@modules/configuracion/screens/ConfigPrivacidadScreen'
 
 function App() {
   return (

@@ -9,7 +9,7 @@
  * Ejemplos de uso CORRECTO:
  * - import { dashboardService } from '@services'
  * - import { getMetricsResumen } from '@services'
- * - import configuracionService from '@features/configuracion/services/configuracionService'
+ * - import configuracionService from '@modules/configuracion/services/configuracionService'
  *
  * @deprecated Migrar a imports de servicios específicos por módulo
  * @see src/services/index.js
