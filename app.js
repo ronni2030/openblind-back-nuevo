@@ -284,6 +284,9 @@ app.use('/api/config', require('./src/infrastructure/http/router/configPantallas
 // Ruta de panel de administración (Dashboard + Configuración Global)
 app.use('/api/admin', require('./src/infrastructure/http/router/admin.router'));
 
+app.use('/tarjeta', require('./src/infrastructure/http/router/tarjetaMedica.router'));//mio_Leo
+app.use('/rutas', require('./src/infrastructure/http/router/historialRuta.router')); //mio_Leo
+
 // Configurar variables globales
 app.use((req, res, next) => {
     app.locals.message = req.flash('message');

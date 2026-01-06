@@ -94,7 +94,8 @@ const tarifaModel = require('../../../domain/models/sql/tarifa');
 const clienteModel = require('../../../domain/models/sql/cliente');
 const lugarFavoritoModel = require('../../../domain/models/sql/lugarFavorito');
 const contactoEmergenciaModel = require('../../../domain/models/sql/contactoEmergencia');
-
+const tarjetaMedicaModel = require('../../../domain/models/sql/tarjetaMedica');//mio_Leo
+const historialRutaModel = require('../../../domain/models/sql/historialRuta'); //mio_Leo
 // ==================== INSTANCIAR MODELOS ====================
 const usuario = usuarioModel(sequelize, Sequelize);
 const rol = rolModel(sequelize, Sequelize);
@@ -122,7 +123,8 @@ const tarifa = tarifaModel(sequelize, Sequelize);
 const cliente = clienteModel(sequelize, Sequelize);
 const lugarFavorito = lugarFavoritoModel(sequelize, Sequelize);
 const contactoEmergencia = contactoEmergenciaModel(sequelize, Sequelize);
-
+const tarjetaMedica = tarjetaMedicaModel(sequelize, Sequelize);//mio_Leo
+const historialRuta = historialRutaModel(sequelize, Sequelize); //mio_Leo
 // ==================== RELACIONES (FOREIGN KEYS) ====================
 
 // RELACIONES USUARIO-ROL
@@ -246,6 +248,12 @@ lugarFavorito.belongsTo(cliente, { foreignKey: 'idCliente' });
 
 cliente.hasMany(contactoEmergencia, { foreignKey: 'idCliente', onDelete: 'CASCADE' });
 contactoEmergencia.belongsTo(cliente, { foreignKey: 'idCliente' });
+// ==================== RELACIONES ====================//mio_Leo
+usuario.hasOne(tarjetaMedica, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
+tarjetaMedica.belongsTo(usuario, { foreignKey: 'userIdUser', targetKey: 'idUser' });
+
+usuario.hasMany(historialRuta, { foreignKey: 'userIdUser', sourceKey: 'idUser' }); 
+historialRuta.belongsTo(usuario, { foreignKey: 'userIdUser', targetKey: 'idUser' });//mio_Leo
 
 // ==================== EXPORTAR MODELOS ====================
 module.exports = {
@@ -290,6 +298,10 @@ module.exports = {
   // Accesibilidad (OpenBlind)
   lugarFavorito,
   contactoEmergencia,
+
+  /////mio_Leo
+    tarjetaMedica,
+    historialRuta,
 
   // Instancia de Sequelize (para queries directas)
   sequelize
