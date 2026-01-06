@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">OpenBlind</string>
-    <string name="title_activity_main">OpenBlind</string>
-    <string name="package_name">com.openblind.app</string>
-    <string name="custom_url_scheme">com.openblind.app</string>
-</resources>

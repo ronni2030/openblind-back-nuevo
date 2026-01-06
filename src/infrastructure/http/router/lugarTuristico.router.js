@@ -12,6 +12,14 @@ const {
     agregarResena
 } = require('../controllers/lugarTuristico.controller');
 
+// Rutas RESTful para front (compatibilidad)
+router.get('/', mostrarLugares);
+router.get('/:id', obtenerLugar);
+router.post('/', crearLugar);
+router.put('/:id', actualizarLugar);
+router.delete('/:id', eliminarLugar);
+
+// Rutas originales (mantener compatibilidad)
 // Obtener todos los lugares turísticos
 router.get('/lista', mostrarLugares);
 

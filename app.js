@@ -266,6 +266,8 @@ app.use('/categoria', require('./src/infrastructure/http/router/categoria.router
 app.use('/estacion', require('./src/infrastructure/http/router/estacion.router'));
 app.use('/tarifas', require('./src/infrastructure/http/router/tarifas.router'));
 app.use('/lugares', require('./src/infrastructure/http/router/lugarTuristico.router'));
+// Compatibilidad con front: exponer rutas de lugares bajo /api/admin/lugares
+app.use('/api/admin/lugares', require('./src/infrastructure/http/router/lugarTuristico.router'));
 app.use('/mensajes', require('./src/infrastructure/http/router/mensaje.router'));
 app.use('/guia-voz', require('./src/infrastructure/http/router/guiaVoz.router'));
 app.use('/reporte', require('./src/infrastructure/http/router/reporte.router'));

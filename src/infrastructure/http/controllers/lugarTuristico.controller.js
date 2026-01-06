@@ -14,23 +14,80 @@ const descifrarSeguro = (dato) => {
   }
 };
 
-// Mostrar todos los lugares turísticos activos
+// Mostrar todos los lugares turísticos activos (soporta filtro por tipo)
 lugarTuristicoCtl.mostrarLugares = async (req, res) => {
     try {
-        const [listaLugares] = await sql.promise().query(`
+        const { tipo, clienteId } = req.query;
+
+        // Compatibilidad: si piden zonas seguras o puntos críticos mediante `tipo`, devolver datos desde sus tablas
+        if (tipo === 'zona_segura') {
+            console.warn('DEPRECATION: uso de query param "tipo=zona_segura" — usar GET /api/admin/zonas-seguras en su lugar. Se eliminará en futuras versiones.');
+            // Asegurar tabla (si no existe, crearla)
+            try {
+                const zonaCtrl = require('./zonaSegura.controller');
+                if (zonaCtrl && zonaCtrl.ensureTable) await zonaCtrl.ensureTable();
+            } catch (e) {
+                console.warn('No se pudo ejecutar ensureTable de zonas_seguras:', e.message);
+            }
+
+            const [rows] = await sql.promise().query(
+                'SELECT idZonaSegura as id, nombreZona as nombre, descripcion, latitud, longitud FROM zonas_seguras WHERE estadoZona = "activo" ORDER BY createZona DESC'
+            );
+            return res.json(rows);
+        }
+        if (tipo === 'punto_critico') {
+            console.warn('DEPRECATION: uso de query param "tipo=punto_critico" — usar GET /api/admin/puntos-criticos en su lugar. Se eliminará en futuras versiones.');
+            // Asegurar tabla
+            try {
+                const puntoCtrl = require('./puntoCritico.controller');
+                if (puntoCtrl && puntoCtrl.ensureTable) await puntoCtrl.ensureTable();
+            } catch (e) {
+                console.warn('No se pudo ejecutar ensureTable de puntos_criticos:', e.message);
+            }
+
+            const [rows] = await sql.promise().query(
+                'SELECT idPuntoCritico as id, nombrePunto as nombre, descripcion, latitud, longitud FROM puntos_criticos WHERE estadoPunto = "activo" ORDER BY createPunto DESC'
+            );
+            return res.json(rows);
+        }
+
+        // Si solicitan lugares favoritos, devolver desde la tabla de favoritos
+        if (tipo === 'favorito') {
+            const ID_CLIENTE = clienteId || 1;
+            const [lugaresFav] = await sql.promise().query(
+                'SELECT idLugarFavorito as id_lugar, nombreLugar as nombre, direccion, latitud, longitud, icono FROM lugares_favoritos WHERE idCliente = ? ORDER BY createLugarFavorito DESC',
+                [ID_CLIENTE]
+            );
+            return res.json(lugaresFav);
+        }
+
+        // Construir consulta base para lugares turísticos
+        let query = `
             SELECT lt.*, cl.nombreCategoriaLugar, e.nombreEstacion
             FROM lugaresTuristicos lt
             LEFT JOIN categoriasLugars cl ON lt.categoriaLugarIdCategoriaLugar = cl.idCategoriaLugar
             LEFT JOIN estaciones e ON lt.estacionIdEstacion = e.idEstacion
             WHERE lt.estadoLugar = "activo"
-        `);
-        
+        `;
+        const params = [];
+
+        // Filtrar por tipo (por nombre o id de categoría)
+        if (tipo) {
+            if (!isNaN(Number(tipo))) {
+                query += ' AND lt.categoriaLugarIdCategoriaLugar = ?';
+                params.push(Number(tipo));
+            } else {
+                query += ' AND LOWER(cl.nombreCategoriaLugar) LIKE ?';
+                params.push(`%${tipo.toLowerCase()}%`);
+            }
+        }
+
+        const [listaLugares] = await sql.promise().query(query, params);
+
         const lugaresCompletos = await Promise.all(
             listaLugares.map(async (lugar) => {
                 // Obtener datos adicionales de MongoDB
-                const lugarMongo = await mongo.lugarTuristicoModel.findOne({ 
-                    idLugarSql: lugar.idLugarTuristico 
-                });
+                const lugarMongo = await mongo.lugarTuristicoModel.findOne({ idLugarSql: lugar.idLugarTuristico });
 
                 // Obtener calificaciones promedio
                 const [calificacionPromedio] = await sql.promise().query(`
@@ -73,25 +130,35 @@ lugarTuristicoCtl.mostrarLugares = async (req, res) => {
 // Crear nuevo lugar turístico
 lugarTuristicoCtl.crearLugar = async (req, res) => {
     try {
-        const { 
-            nombreLugar, codigoLugar, categoriaLugarId, estacionId, usuarioRegistraId,
-            descripcion, ubicacion, referencias, imagenes, videos, horarios, 
+        // Aceptar alias enviados por distintos frentes (p.ej. nombre vs nombreLugar)
+        const {
+            nombreLugar: _nombreLugar, nombre,
+            codigoLugar: _codigoLugar, codigo,
+            categoriaLugarId: _categoriaLugarId, categoriaId,
+            estacionId,
+            usuarioRegistraId: _usuarioRegistraId, usuarioId,
+            descripcion, ubicacion, referencias, imagenes, videos, horarios,
             tarifas, servicios, contacto
         } = req.body;
 
+        const nombreLugarFinal = _nombreLugar || nombre || '';
+        const codigoLugarFinal = _codigoLugar || codigo || '';
+        const categoriaLugarIdFinal = _categoriaLugarId || categoriaId || null;
+        const usuarioRegistraIdFinal = _usuarioRegistraId || usuarioId || null;
+
         // Validación de campos requeridos
-        if (!nombreLugar) {
+        if (!nombreLugarFinal) {
             return res.status(400).json({ message: 'Nombre del lugar es obligatorio' });
         }
 
         // Crear en SQL
         const nuevoLugar = await orm.lugarTuristico.create({
-            nombreLugar: cifrarDatos(nombreLugar),
-            codigoLugar: cifrarDatos(codigoLugar || ''),
+            nombreLugar: cifrarDatos(nombreLugarFinal),
+            codigoLugar: cifrarDatos(codigoLugarFinal || ''),
             estadoLugar: 'activo',
-            categoriaLugarIdCategoriaLugar: categoriaLugarId,
+            categoriaLugarIdCategoriaLugar: categoriaLugarIdFinal,
             estacionIdEstacion: estacionId,
-            usuarioIdUsuario: usuarioRegistraId,
+            usuarioIdUsuario: usuarioRegistraIdFinal,
             createLugar: new Date().toLocaleString(),
         });
 

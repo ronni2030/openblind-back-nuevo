@@ -5,6 +5,10 @@ const configuracionGlobalController = require('../controllers/admin/configuracio
 const metricasController = require('../controllers/admin/metricas.controller');
 const incidenciasController = require('../controllers/admin/incidencias.controller');
 const soporteController = require('../controllers/admin/soporte.controller');
+const usuarioController = require('../controllers/usuario.controller');
+
+// Compatibilidad: exponer listado de usuarios bajo /api/admin/usuarios
+router.get('/usuarios', usuarioController.mostrarUsuarios);
 
 /**
  * Router de Módulo Admin
@@ -130,5 +134,10 @@ router.put('/soporte/:id', soporteController.update);
 
 /** DELETE /api/admin/soporte/:id - Archivar ticket */
 router.delete('/soporte/:id', soporteController.delete);
+
+// RUTAS ADICIONALES: Zonas seguras y Puntos críticos
+// Montar routers específicos (no dependen de lugaresTuristicos)
+router.use('/zonas-seguras', require('../router/zonaSegura.router'));
+router.use('/puntos-criticos', require('../router/puntoCritico.router'));
 
 module.exports = router;
