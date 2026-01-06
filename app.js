@@ -256,6 +256,10 @@ app.use(injectApiMethods);
 app.use(require('./src/infrastructure/http/router/index'))
 app.use('/pagina', require('./src/infrastructure/http/router/pagina.router'))
 app.use('/auth', require('./src/infrastructure/http/router/auth.router'));
+app.use(
+  "/tracking",
+  require("./src/infrastructure/http/router/tracking.router")
+);
 app.use('/conductor', require('./src/infrastructure/http/router/conductor.router'));
 app.use('/horario', require('./src/infrastructure/http/router/horario.router'));
 app.use('/empresas', require('./src/infrastructure/http/router/empresa.router'));
